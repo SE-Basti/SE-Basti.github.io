@@ -530,29 +530,12 @@
       <a class="btn btn-primary" href="#kontakt">Kalibrierauftrag anfragen →</a>
       <a class="btn btn-ghost" href="#leistungen">Leistungen ansehen</a>
     </div>
-    <div class="gauge" aria-label="Interaktiver Kalibrierwert-Demonstrator">
+    <div class="gauge" role="img" aria-label="Beispiel-Kalibrierwert: DC-Spannung 10,0000 V – in Toleranz">
       <div class="read">
         <div class="lab">Kalibrierwert · DC-Spannung</div>
-        <div class="val" id="gv-display">10,000 <em id="gv-dev">0</em> V</div>
-        <div class="tol" id="gv-status">Sollwert 10,0000 V · Abweichung <b id="gv-tol-text">in Toleranz</b></div>
-        <div class="bar">
-          <span class="ok" id="gv-ok"></span>
-          <span class="mk" id="gv-mk" style="animation:none;left:50%"></span>
-        </div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px">
-          <div>
-            <div style="font-family:var(--mono);font-size:.6rem;letter-spacing:.1em;color:var(--muted);text-transform:uppercase;margin-bottom:4px">Sollwert (V)</div>
-            <input id="gv-soll" type="number" value="10" step="0.0001"
-              style="width:100%;background:rgba(255,255,255,.08);border:1px solid var(--line-d);border-radius:5px;color:#fff;font-family:var(--mono);font-size:.88rem;padding:6px 10px"
-              oninput="gvCalc()">
-          </div>
-          <div>
-            <div style="font-family:var(--mono);font-size:.6rem;letter-spacing:.1em;color:var(--muted);text-transform:uppercase;margin-bottom:4px">Messwert (V)</div>
-            <input id="gv-mess" type="number" value="10" step="0.0001"
-              style="width:100%;background:rgba(255,255,255,.08);border:1px solid var(--line-d);border-radius:5px;color:#fff;font-family:var(--mono);font-size:.88rem;padding:6px 10px"
-              oninput="gvCalc()">
-          </div>
-        </div>
+        <div class="val">10,000 <em>0</em> V</div>
+        <div class="tol">Sollwert 10,0000 V · Abweichung <b>in Toleranz</b></div>
+        <div class="bar"><span class="ok"></span><span class="mk"></span></div>
       </div>
       <div class="meta">
         <div><div class="k">Rückführung</div><div class="v">national auf SI-Einheiten</div></div>

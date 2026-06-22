@@ -385,81 +385,167 @@
 </section>
 
 <!-- LEISTUNGSÜBERSICHT -->
-<section class="block" aria-labelledby="h-leistungen">
+<section class="block" aria-labelledby="h-leistungen" id="geraetetypen">
   <div class="wrap">
     <div class="lead-head">
       <div><span class="section-tag">Leistungen</span><h2 id="h-leistungen">Was wir für Sie kalibrieren</h2></div>
-      <p>Alle Leistungen direkt aus unserem Laboratorium in Stolberg – oder bei Ihnen vor Ort.</p>
+      <p>Alle Leistungen direkt aus unserem Laboratorium in Stolberg — oder bei Ihnen vor Ort.</p>
     </div>
-        <div class="grid3" style="grid-template-columns:repeat(3,1fr)">
-      <div class="card">
-        <h3>Multiprodukt-Kalibratoren</h3>
-        <p style="color:var(--muted-d);font-size:.92rem;margin-bottom:14px">Fluke <b>5730A</b> · Fluke <b>5560A</b> · Fluke <b>8588A</b> · Yokogawa <b>2553A</b> · Time Electronics <b>1044</b></p>
-        <div style="border-top:1px solid var(--line-l);padding-top:12px">
-          <div style="font-family:var(--mono);font-size:.7rem;color:var(--muted-d);letter-spacing:.08em;margin-bottom:8px;text-transform:uppercase">Kalibrierparameter</div>
-          <div style="display:flex;flex-wrap:wrap;gap:6px"><span style="font-family:var(--mono);font-size:.72rem;background:var(--paper);border:1px solid var(--line-l);padding:3px 8px;border-radius:4px">DC-Spannung</span><span style="font-family:var(--mono);font-size:.72rem;background:var(--paper);border:1px solid var(--line-l);padding:3px 8px;border-radius:4px">AC-Spannung</span><span style="font-family:var(--mono);font-size:.72rem;background:var(--paper);border:1px solid var(--line-l);padding:3px 8px;border-radius:4px">DC-Strom</span><span style="font-family:var(--mono);font-size:.72rem;background:var(--paper);border:1px solid var(--line-l);padding:3px 8px;border-radius:4px">AC-Strom</span><span style="font-family:var(--mono);font-size:.72rem;background:var(--paper);border:1px solid var(--line-l);padding:3px 8px;border-radius:4px">Widerstand</span><span style="font-family:var(--mono);font-size:.72rem;background:var(--paper);border:1px solid var(--line-l);padding:3px 8px;border-radius:4px">Frequenz</span><span style="font-family:var(--mono);font-size:.72rem;background:var(--paper);border:1px solid var(--line-l);padding:3px 8px;border-radius:4px">Kapazität</span></div>
-        </div>
+
+    <!-- ── EBENE 1: Akkreditierte Kalibrierung ── -->
+    <div style="border:1.5px solid var(--blue-br);border-radius:11px;padding:24px 28px;margin-bottom:16px;background:var(--paper)">
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:20px">
+        <span style="display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:.72rem;padding:4px 12px;border-radius:20px;background:rgba(11,83,240,.08);color:var(--blue);font-weight:500">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"/></svg>
+          Akkreditierte Kalibrierung nach DIN EN ISO/IEC 17025:2018
+        </span>
+        <span style="font-family:var(--mono);font-size:.7rem;color:var(--blue-br)">D-K-19425-01-01 / -01-02</span>
       </div>
-      <div class="card">
-        <h3>Multimeter &amp; Stromzangen</h3>
-        <p style="color:var(--muted-d);font-size:.92rem;margin-bottom:14px">Fluke <b>87V</b>, <b>289</b>, <b>8845A</b> · Keysight <b>34461A</b>, <b>U1271A</b> · Hioki <b>DT4256</b> · Metrel · <em>Stromzangen:</em> Fluke <b>376</b>, <b>345</b> · Chauvin Arnoux · Hioki <b>CT6863</b></p>
-        <div style="border-top:1px solid var(--line-l);padding-top:12px">
-          <div style="font-family:var(--mono);font-size:.7rem;color:var(--muted-d);letter-spacing:.08em;margin-bottom:8px;text-transform:uppercase">Kalibrierparameter</div>
-          <div style="display:flex;flex-wrap:wrap;gap:6px"><span style="font-family:var(--mono);font-size:.72rem;background:var(--paper);border:1px solid var(--line-l);padding:3px 8px;border-radius:4px">DC-Spannung</span><span style="font-family:var(--mono);font-size:.72rem;background:var(--paper);border:1px solid var(--line-l);padding:3px 8px;border-radius:4px">AC-Spannung</span><span style="font-family:var(--mono);font-size:.72rem;background:var(--paper);border:1px solid var(--line-l);padding:3px 8px;border-radius:4px">DC-Strom</span><span style="font-family:var(--mono);font-size:.72rem;background:var(--paper);border:1px solid var(--line-l);padding:3px 8px;border-radius:4px">AC-Strom</span><span style="font-family:var(--mono);font-size:.72rem;background:var(--paper);border:1px solid var(--line-l);padding:3px 8px;border-radius:4px">Widerstand</span><span style="font-family:var(--mono);font-size:.72rem;background:var(--paper);border:1px solid var(--line-l);padding:3px 8px;border-radius:4px">Kapazität</span><span style="font-family:var(--mono);font-size:.72rem;background:var(--paper);border:1px solid var(--line-l);padding:3px 8px;border-radius:4px">Leistungsfaktor</span></div>
-        </div>
+
+      <!-- Elektrisch: 3-Spalten-Tabelle -->
+      <div style="font-family:var(--mono);font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted-d);margin-bottom:10px">Elektrische Messgrößen</div>
+      <div style="overflow-x:auto;margin-bottom:24px">
+        <table style="width:100%;border-collapse:collapse;font-size:.88rem">
+          <thead>
+            <tr style="background:var(--paper-2)">
+              <th style="padding:9px 14px;text-align:left;font-family:var(--mono);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted-d);border-bottom:2px solid var(--line-l);width:28%">Kategorie</th>
+              <th style="padding:9px 14px;text-align:left;font-family:var(--mono);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted-d);border-bottom:2px solid var(--line-l);width:30%">Kalibrierparameter</th>
+              <th style="padding:9px 14px;text-align:left;font-family:var(--mono);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted-d);border-bottom:2px solid var(--line-l)">Beispiele</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border-bottom:1px solid var(--line-l)">
+              <td style="padding:10px 14px;font-weight:600;color:var(--ink)">Multiprodukt-Kalibratoren</td>
+              <td style="padding:10px 14px;color:var(--muted-d)">Spannung · Stromstärke · Widerstand · Frequenz · <span style="white-space:nowrap">DC-Leistung</span></td>
+              <td style="padding:10px 14px;color:var(--muted-d);font-family:var(--mono);font-size:.82rem">Fluke 5730A · Fluke 5560A · Yokogawa 2553A</td>
+            </tr>
+            <tr style="border-bottom:1px solid var(--line-l)">
+              <td style="padding:10px 14px;font-weight:600;color:var(--ink)">Multimeter &amp; Stromzangen</td>
+              <td style="padding:10px 14px;color:var(--muted-d)">Spannung · Stromstärke · Leistungsfaktor</td>
+              <td style="padding:10px 14px;color:var(--muted-d);font-family:var(--mono);font-size:.82rem">Fluke 87V · Keysight 34461A · Hioki DT4256</td>
+            </tr>
+            <tr style="border-bottom:1px solid var(--line-l)">
+              <td style="padding:10px 14px;font-weight:600;color:var(--ink)">Frequenzzähler &amp; Generatoren</td>
+              <td style="padding:10px 14px;color:var(--muted-d)">Frequenz · Amplitude · DC-Offset · THD</td>
+              <td style="padding:10px 14px;color:var(--muted-d);font-family:var(--mono);font-size:.82rem">Keysight 53131A · Rigol DG1022Z · Tektronix AFG3021C</td>
+            </tr>
+            <tr style="border-bottom:1px solid var(--line-l)">
+              <td style="padding:10px 14px;font-weight:600;color:var(--ink)">Milliohm- &amp; Isolationsmessgeräte</td>
+              <td style="padding:10px 14px;color:var(--muted-d)">Niederohmwiderstand · Isolationsmessung · Durchgangsprüfung</td>
+              <td style="padding:10px 14px;color:var(--muted-d);font-family:var(--mono);font-size:.82rem">Megger MIT410 · Fluke 1550C · Metrel MI3100</td>
+            </tr>
+            <tr style="border-bottom:1px solid var(--line-l)">
+              <td style="padding:10px 14px;font-weight:600;color:var(--ink)">Sicherheitsprüfgeräte</td>
+              <td style="padding:10px 14px;color:var(--muted-d)">Schutzleiterwiderstand · Isolation · RCD-Prüfung</td>
+              <td style="padding:10px 14px;color:var(--muted-d);font-family:var(--mono);font-size:.82rem">Fluke 6500-2 · Fluke 1654B · Profitest MXTRA</td>
+            </tr>
+            <tr>
+              <td style="padding:10px 14px;font-weight:600;color:var(--ink)">Oszilloskope</td>
+              <td style="padding:10px 14px;color:var(--muted-d)">Amplitude · Zeitbasis · Bandbreite</td>
+              <td style="padding:10px 14px;color:var(--muted-d);font-family:var(--mono);font-size:.82rem">Tektronix TDS2014 · LeCroy WaveRunner 104Xi</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
-      <div class="card">
-        <h3>Frequenzzähler &amp; Funktionsgeneratoren</h3>
-        <p style="color:var(--muted-d);font-size:.92rem;margin-bottom:14px"><em>Frequenzzähler:</em> Keysight <b>53131A</b> · Fluke <b>PM6685</b> · Rohde &amp; Schwarz <b>HM8123</b> · <em>Funktionsgeneratoren:</em> Keysight <b>33500B</b> · Rigol <b>DG1022Z</b> · Tektronix <b>AFG3021C</b> · R&amp;S <b>HMF2550</b></p>
-        <div style="border-top:1px solid var(--line-l);padding-top:12px">
-          <div style="font-family:var(--mono);font-size:.7rem;color:var(--muted-d);letter-spacing:.08em;margin-bottom:8px;text-transform:uppercase">Kalibrierparameter</div>
-          <div style="display:flex;flex-wrap:wrap;gap:6px"><span style="font-family:var(--mono);font-size:.72rem;background:var(--paper);border:1px solid var(--line-l);padding:3px 8px;border-radius:4px">Frequenz</span><span style="font-family:var(--mono);font-size:.72rem;background:var(--paper);border:1px solid var(--line-l);padding:3px 8px;border-radius:4px">Amplitude (V)</span><span style="font-family:var(--mono);font-size:.72rem;background:var(--paper);border:1px solid var(--line-l);padding:3px 8px;border-radius:4px">DC-Offset</span><span style="font-family:var(--mono);font-size:.72rem;background:var(--paper);border:1px solid var(--line-l);padding:3px 8px;border-radius:4px">Oberwellengehalt (THD)</span><span style="font-family:var(--mono);font-size:.72rem;background:var(--paper);border:1px solid var(--line-l);padding:3px 8px;border-radius:4px">Anstiegszeit</span></div>
-        </div>
-      </div>
-      <div class="card">
-        <h3>Milliohm- &amp; Isolationsmessgeräte</h3>
-        <p style="color:var(--muted-d);font-size:.92rem;margin-bottom:14px">Megger <b>MIT410</b>, <b>TRM210</b> · Metrel <b>MI3100</b> · Fluke <b>1550C</b> · Rishabh <b>RISH Meg 5000</b></p>
-        <div style="border-top:1px solid var(--line-l);padding-top:12px">
-          <div style="font-family:var(--mono);font-size:.7rem;color:var(--muted-d);letter-spacing:.08em;margin-bottom:8px;text-transform:uppercase">Kalibrierparameter</div>
-          <div style="display:flex;flex-wrap:wrap;gap:6px"><span style="font-family:var(--mono);font-size:.72rem;background:var(--paper);border:1px solid var(--line-l);padding:3px 8px;border-radius:4px">Isolationswiderstand</span><span style="font-family:var(--mono);font-size:.72rem;background:var(--paper);border:1px solid var(--line-l);padding:3px 8px;border-radius:4px">Niederohmwiderstand</span><span style="font-family:var(--mono);font-size:.72rem;background:var(--paper);border:1px solid var(--line-l);padding:3px 8px;border-radius:4px">Durchgangsprüfung</span></div>
-        </div>
-      </div>
-      <div class="card">
-        <h3>LCR-Meter &amp; Impedanzmessgeräte</h3>
-        <p style="color:var(--muted-d);font-size:.92rem;margin-bottom:14px">Keysight <b>E4980A</b> · Hioki <b>IM3536</b> · BK Precision <b>891</b> · Wayne Kerr <b>6500B</b></p>
-        <div style="border-top:1px solid var(--line-l);padding-top:12px">
-          <div style="font-family:var(--mono);font-size:.7rem;color:var(--muted-d);letter-spacing:.08em;margin-bottom:8px;text-transform:uppercase">Kalibrierparameter</div>
-          <div style="display:flex;flex-wrap:wrap;gap:6px"><span style="font-family:var(--mono);font-size:.72rem;background:var(--paper);border:1px solid var(--line-l);padding:3px 8px;border-radius:4px">Kapazität</span><span style="font-family:var(--mono);font-size:.72rem;background:var(--paper);border:1px solid var(--line-l);padding:3px 8px;border-radius:4px">Induktivität</span><span style="font-family:var(--mono);font-size:.72rem;background:var(--paper);border:1px solid var(--line-l);padding:3px 8px;border-radius:4px">Verlustfaktor (D)</span><span style="font-family:var(--mono);font-size:.72rem;background:var(--paper);border:1px solid var(--line-l);padding:3px 8px;border-radius:4px">Impedanz (Z)</span><span style="font-family:var(--mono);font-size:.72rem;background:var(--paper);border:1px solid var(--line-l);padding:3px 8px;border-radius:4px">ESR</span></div>
-        </div>
-      </div>
-      <div class="card">
-        <h3>Temperaturmessgeräte</h3>
-        <p style="color:var(--muted-d);font-size:.92rem;margin-bottom:14px">Pt100-Fühler · Thermoelemente Typ <b>K, J, T, N</b> · Fluke <b>971</b> · Testo <b>176 T4</b> · Infrarot-Thermometer</p>
-        <div style="border-top:1px solid var(--line-l);padding-top:12px">
-          <div style="font-family:var(--mono);font-size:.7rem;color:var(--muted-d);letter-spacing:.08em;margin-bottom:8px;text-transform:uppercase">Kalibrierparameter</div>
-          <div style="display:flex;flex-wrap:wrap;gap:6px"><span style="font-family:var(--mono);font-size:.72rem;background:var(--paper);border:1px solid var(--line-l);padding:3px 8px;border-radius:4px">Temperatur (°C / K)</span><span style="font-family:var(--mono);font-size:.72rem;background:var(--paper);border:1px solid var(--line-l);padding:3px 8px;border-radius:4px">RTD-Widerstand (Ω)</span><span style="font-family:var(--mono);font-size:.72rem;background:var(--paper);border:1px solid var(--line-l);padding:3px 8px;border-radius:4px">Thermospannung (mV)</span><span style="font-family:var(--mono);font-size:.72rem;background:var(--paper);border:1px solid var(--line-l);padding:3px 8px;border-radius:4px">Fühleranschluss</span></div>
-        </div>
-      </div>
-      <div class="card">
-        <h3>Sicherheitsprüfgeräte &amp; Installationstester</h3>
-        <p style="color:var(--muted-d);font-size:.92rem;margin-bottom:14px">Fluke <b>6500-2</b> · Fluke <b>1654B</b> · Gossen Metrawatt <b>Profitest MXTRA</b> · Metrel <b>MI3102</b> · Sonel <b>PAT-806</b></p>
-        <div style="border-top:1px solid var(--line-l);padding-top:12px">
-          <div style="font-family:var(--mono);font-size:.7rem;color:var(--muted-d);letter-spacing:.08em;margin-bottom:8px;text-transform:uppercase">Kalibrierparameter</div>
-          <div style="display:flex;flex-wrap:wrap;gap:6px"><span style="font-family:var(--mono);font-size:.72rem;background:var(--paper);border:1px solid var(--line-l);padding:3px 8px;border-radius:4px">Isolationswiderstand</span><span style="font-family:var(--mono);font-size:.72rem;background:var(--paper);border:1px solid var(--line-l);padding:3px 8px;border-radius:4px">Schleifenimpedanz</span><span style="font-family:var(--mono);font-size:.72rem;background:var(--paper);border:1px solid var(--line-l);padding:3px 8px;border-radius:4px">Schutzleiterwiderstand</span><span style="font-family:var(--mono);font-size:.72rem;background:var(--paper);border:1px solid var(--line-l);padding:3px 8px;border-radius:4px">RCD-Auslösezeit</span><span style="font-family:var(--mono);font-size:.72rem;background:var(--paper);border:1px solid var(--line-l);padding:3px 8px;border-radius:4px">Berührungsspannung</span></div>
-        </div>
-      </div>
-      <div class="card">
-        <h3>Oszilloskope</h3>
-        <p style="color:var(--muted-d);font-size:.92rem;margin-bottom:14px">Tektronix <b>TDS2014</b> · LeCroy <b>WaveRunner 104Xi</b> · Keysight <b>DSOX1204G</b> · Rohde &amp; Schwarz <b>RTB2004</b> · Rigol <b>DS1054Z</b></p>
-        <div style="border-top:1px solid var(--line-l);padding-top:12px">
-          <div style="font-family:var(--mono);font-size:.7rem;color:var(--muted-d);letter-spacing:.08em;margin-bottom:8px;text-transform:uppercase">Kalibrierparameter</div>
-          <div style="display:flex;flex-wrap:wrap;gap:6px"><span style="font-family:var(--mono);font-size:.72rem;background:var(--paper);border:1px solid var(--line-l);padding:3px 8px;border-radius:4px">DC-Verstärkung (V/div)</span><span style="font-family:var(--mono);font-size:.72rem;background:var(--paper);border:1px solid var(--line-l);padding:3px 8px;border-radius:4px">Zeitbasis (s/div)</span><span style="font-family:var(--mono);font-size:.72rem;background:var(--paper);border:1px solid var(--line-l);padding:3px 8px;border-radius:4px">Bandbreite</span><span style="font-family:var(--mono);font-size:.72rem;background:var(--paper);border:1px solid var(--line-l);padding:3px 8px;border-radius:4px">Eingangsimpedanz</span><span style="font-family:var(--mono);font-size:.72rem;background:var(--paper);border:1px solid var(--line-l);padding:3px 8px;border-radius:4px">Triggerschwelle</span></div>
-        </div>
+
+      <!-- Temperatur: 3-Spalten-Tabelle -->
+      <div style="font-family:var(--mono);font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted-d);margin-bottom:10px">Temperatur</div>
+      <div style="overflow-x:auto">
+        <table style="width:100%;border-collapse:collapse;font-size:.88rem">
+          <thead>
+            <tr style="background:var(--paper-2)">
+              <th style="padding:9px 14px;text-align:left;font-family:var(--mono);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted-d);border-bottom:2px solid var(--line-l);width:28%">Kategorie</th>
+              <th style="padding:9px 14px;text-align:left;font-family:var(--mono);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted-d);border-bottom:2px solid var(--line-l);width:30%">Kalibrierparameter</th>
+              <th style="padding:9px 14px;text-align:left;font-family:var(--mono);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted-d);border-bottom:2px solid var(--line-l)">Beispiele</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border-bottom:1px solid var(--line-l)">
+              <td style="padding:10px 14px;font-weight:600;color:var(--ink)">Widerstandsthermometer (RTD)</td>
+              <td style="padding:10px 14px;color:var(--muted-d)">Widerstand bei Referenztemperatur · Kennlinie</td>
+              <td style="padding:10px 14px;color:var(--muted-d);font-family:var(--mono);font-size:.82rem">Pt100 · Pt1000 · Ni100</td>
+            </tr>
+            <tr style="border-bottom:1px solid var(--line-l)">
+              <td style="padding:10px 14px;font-weight:600;color:var(--ink)">Thermoelemente inkl. Anzeige</td>
+              <td style="padding:10px 14px;color:var(--muted-d)">Thermospannung · Kennlinie nach IEC 60584</td>
+              <td style="padding:10px 14px;color:var(--muted-d);font-family:var(--mono);font-size:.82rem">Typ K · J · T · N · S · R · B</td>
+            </tr>
+            <tr>
+              <td style="padding:10px 14px;font-weight:600;color:var(--ink)">Temperatursimulation &amp; -messung</td>
+              <td style="padding:10px 14px;color:var(--muted-d)">Temperatur (°C / K) · Fühleranschluss</td>
+              <td style="padding:10px 14px;color:var(--muted-d);font-family:var(--mono);font-size:.82rem">Testo 176 T4 · Fluke 971</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
-    <p style="margin-top:20px;font-size:.9rem;color:var(--muted-d)">
-      Ihr Gerät nicht in der Liste? Wir prüfen gerne, ob eine Kalibrierung in unserem Akkreditierungsumfang möglich ist — einfach anfragen.
-    </p>
+
+    <!-- ── EBENE 2: Werkskalibrierung ── -->
+    <div style="border:0.5px solid var(--line-l);border-radius:11px;padding:22px 28px;margin-bottom:16px;background:var(--paper)">
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:16px">
+        <span style="display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:.72rem;padding:4px 12px;border-radius:20px;background:var(--paper-2);color:var(--muted-d);border:1px solid var(--line-l)">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg>
+          Werkskalibrierung
+        </span>
+        <span style="font-family:var(--mono);font-size:.7rem;color:var(--muted-d)">selbst durchgeführt · rückführbarer Kalibrierschein</span>
+      </div>
+      <div style="overflow-x:auto">
+        <table style="width:100%;border-collapse:collapse;font-size:.88rem">
+          <thead>
+            <tr style="background:var(--paper-2)">
+              <th style="padding:9px 14px;text-align:left;font-family:var(--mono);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted-d);border-bottom:2px solid var(--line-l);width:28%">Kategorie</th>
+              <th style="padding:9px 14px;text-align:left;font-family:var(--mono);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted-d);border-bottom:2px solid var(--line-l);width:30%">Kalibrierparameter</th>
+              <th style="padding:9px 14px;text-align:left;font-family:var(--mono);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted-d);border-bottom:2px solid var(--line-l)">Beispiele</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border-bottom:1px solid var(--line-l)">
+              <td style="padding:10px 14px;font-weight:600;color:var(--ink)">LCR-Meter &amp; Impedanzmessgeräte</td>
+              <td style="padding:10px 14px;color:var(--muted-d)">Kapazität · Induktivität · Impedanz</td>
+              <td style="padding:10px 14px;color:var(--muted-d);font-family:var(--mono);font-size:.82rem">Hameg HM8118 · Keysight U1732A</td>
+            </tr>
+            <tr style="border-bottom:1px solid var(--line-l)">
+              <td style="padding:10px 14px;font-weight:600;color:var(--ink)">Feuchtemessgeräte &amp; -logger</td>
+              <td style="padding:10px 14px;color:var(--muted-d)">Feuchte (rel.) · Temperatur</td>
+              <td style="padding:10px 14px;color:var(--muted-d);font-family:var(--mono);font-size:.82rem">Testo Saveris 2H1 · Elpro Ecolog TH1</td>
+            </tr>
+            <tr style="border-bottom:1px solid var(--line-l)">
+              <td style="padding:10px 14px;font-weight:600;color:var(--ink)">Manometer</td>
+              <td style="padding:10px 14px;color:var(--muted-d)">Druck</td>
+              <td style="padding:10px 14px;color:var(--muted-d);font-family:var(--mono);font-size:.82rem">Wika DG-10-E · Druck DPI 705</td>
+            </tr>
+            <tr style="border-bottom:1px solid var(--line-l)">
+              <td style="padding:10px 14px;font-weight:600;color:var(--ink)">Waagen</td>
+              <td style="padding:10px 14px;color:var(--muted-d)">Masse</td>
+              <td style="padding:10px 14px;color:var(--muted-d);font-family:var(--mono);font-size:.82rem">Kern 440-33N · Mettler Toledo ME1002</td>
+            </tr>
+            <tr>
+              <td style="padding:10px 14px;font-weight:600;color:var(--ink)">Spektrum-Analysatoren</td>
+              <td style="padding:10px 14px;color:var(--muted-d)">Hochfrequenz</td>
+              <td style="padding:10px 14px;color:var(--muted-d);font-family:var(--mono);font-size:.82rem">Hameg HMS1000E · Rigol DSA1030A</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ── EBENE 3: Koordinierte Abwicklung ── -->
+    <div style="border:0.5px solid #d4a017;border-radius:11px;padding:22px 28px;background:rgba(212,160,23,.04)">
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:12px">
+        <span style="display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:.72rem;padding:4px 12px;border-radius:20px;background:rgba(212,160,23,.12);color:#a07010">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M17 1l4 4-4 4"/><path d="M3 11V9a4 4 0 014-4h14"/><path d="M7 23l-4-4 4-4"/><path d="M21 13v2a4 4 0 01-4 4H3"/></svg>
+          Koordinierte Abwicklung über Partnerlabore
+        </span>
+        <span style="font-family:var(--mono);font-size:.7rem;color:#a07010">ein Ansprechpartner — wir regeln den Rest</span>
+      </div>
+      <p style="font-size:.93rem;color:var(--muted-d);line-height:1.72;margin:0 0 12px">
+        Kein Gerät bleibt unkalibriert: Was wir nicht selbst durchführen, organisieren wir über unser Netzwerk akkreditierter Partnerlabore. Sie übergeben — wir übernehmen Logistik, Kommunikation und vollständige Dokumentation.
+      </p>
+      <a href="/#kontakt" style="display:inline-flex;align-items:center;gap:6px;font-family:var(--display);font-weight:600;font-size:.88rem;color:var(--blue);text-decoration:none">
+        Anfrage stellen — wir prüfen und koordinieren kurzfristig →
+      </a>
+    </div>
+
   </div>
 </section>
 

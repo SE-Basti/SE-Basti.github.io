@@ -1,0 +1,10 @@
+# robots.txt – west-kal.de
+# Alle Crawler erlaubt, Admin-Ordner sperren
+
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /drafts/
+
+# Sitemap-Ort für Google & Bing
+Sitemap: https://www.west-kal.de/sitemap.xml

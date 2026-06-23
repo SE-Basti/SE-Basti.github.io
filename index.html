@@ -1125,7 +1125,7 @@
           <span style="width:10px;height:10px;border-radius:50%;background:transparent"></span>
         </span>
         <span>
-          <span style="display:block;font-family:var(--display);font-weight:700;font-size:1.05rem;color:#fff;margin-bottom:4px">Geführter Konfigurator</span>
+          <span style="display:block;font-family:var(--display);font-weight:700;font-size:1.05rem;color:#fff;margin-bottom:4px">Mehrere Geräte erfassen</span>
           <span style="display:block;font-size:.86rem;color:#9FACBA;line-height:1.55">Schritt für Schritt — für mehrere Geräte und komplexe Aufträge mit vielen Positionen.</span>
         </span>
       </button>
@@ -1343,20 +1343,29 @@ document.getElementById('anfrage').addEventListener('submit',async function(e){
    Tab-Umschalter
 ═══════════════════════════════════════ */
 function switchTab(t){
-  document.getElementById('panel-schnell').style.display = t==='schnell'?'':'none';
-  document.getElementById('panel-konfig').style.display  = t==='konfig' ?'':'none';
+  var ps=document.getElementById('panel-schnell');
+  var pk=document.getElementById('panel-konfig');
+  if(ps) ps.style.display = t==='schnell'?'':'none';
+  if(pk) pk.style.display = t==='konfig' ?'':'none';
+  if(t==='konfig' && typeof initKonfigurator==='function') initKonfigurator();
   var cs=document.getElementById('tab-schnell'), ck=document.getElementById('tab-konfig');
   var ds=document.getElementById('dot-schnell'), dk=document.getElementById('dot-konfig');
-  // Schnellanfrage
-  cs.style.background    = t==='schnell'?'rgba(59,110,245,.12)':'rgba(255,255,255,.04)';
-  cs.style.borderColor   = t==='schnell'?'var(--blue-br)':'var(--line-d)';
-  ds.style.borderColor   = t==='schnell'?'var(--blue-br)':'var(--muted)';
-  ds.firstElementChild.style.background = t==='schnell'?'var(--blue-br)':'transparent';
-  // Konfigurator
-  ck.style.background    = t==='konfig'?'rgba(59,110,245,.12)':'rgba(255,255,255,.04)';
-  ck.style.borderColor   = t==='konfig'?'var(--blue-br)':'var(--line-d)';
-  dk.style.borderColor   = t==='konfig'?'var(--blue-br)':'var(--muted)';
-  dk.firstElementChild.style.background = t==='konfig'?'var(--blue-br)':'transparent';
+  if(cs){
+    cs.style.background  = t==='schnell'?'rgba(59,110,245,.12)':'rgba(255,255,255,.04)';
+    cs.style.borderColor = t==='schnell'?'var(--blue-br)':'var(--line-d)';
+  }
+  if(ds){
+    ds.style.borderColor = t==='schnell'?'var(--blue-br)':'var(--muted)';
+    if(ds.firstElementChild) ds.firstElementChild.style.background = t==='schnell'?'var(--blue-br)':'transparent';
+  }
+  if(ck){
+    ck.style.background  = t==='konfig'?'rgba(59,110,245,.12)':'rgba(255,255,255,.04)';
+    ck.style.borderColor = t==='konfig'?'var(--blue-br)':'var(--line-d)';
+  }
+  if(dk){
+    dk.style.borderColor = t==='konfig'?'var(--blue-br)':'var(--muted)';
+    if(dk.firstElementChild) dk.firstElementChild.style.background = t==='konfig'?'var(--blue-br)':'transparent';
+  }
 }
 }
 

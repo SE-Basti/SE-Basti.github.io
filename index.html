@@ -1101,19 +1101,34 @@
   <div class="wrap" style="padding-top:40px">
     <div class="lead-head">
       <div><div class="tag">Kontakt</div><h2 id="h-kontakt" style="color:#fff">Kalibrieranfrage stellen</h2></div>
-      <p style="color:#9FACBA">Wählen Sie die für Sie passende Form — schnelle Anfrage oder geführter Konfigurator für komplexe Aufträge.</p>
+      <p style="color:#9FACBA">Ob einzelnes Messmittel oder komplettes Prüfmittelmanagement — wir finden den passenden Weg.</p>
     </div>
 
-    <!-- TAB-LEISTE -->
-    <div style="display:flex;gap:0;margin-bottom:28px;border-bottom:1px solid var(--line-d)">
-      <button id="tab-schnell" style="color:var(--blue-br)" onclick="switchTab('schnell')"
-        style="font-family:var(--display);font-size:.95rem;font-weight:600;background:none;border:0;border-bottom:2px solid var(--blue-br);color:var(--blue-br);padding:10px 22px 12px;cursor:pointer;margin-bottom:-1px">
-        Schnellanfrage
+    <!-- ANFRAGE-WAHL -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:32px">
+
+      <button id="tab-schnell" onclick="switchTab('schnell')" type="button"
+        style="text-align:left;background:rgba(59,110,245,.12);border:1.5px solid var(--blue-br);border-radius:11px;padding:20px 22px;cursor:pointer;transition:all .2s;display:flex;gap:14px;align-items:flex-start">
+        <span id="dot-schnell" style="width:22px;height:22px;border-radius:50%;border:2px solid var(--blue-br);display:inline-flex;align-items:center;justify-content:center;flex:none;margin-top:2px">
+          <span style="width:10px;height:10px;border-radius:50%;background:var(--blue-br)"></span>
+        </span>
+        <span>
+          <span style="display:block;font-family:var(--display);font-weight:700;font-size:1.05rem;color:#fff;margin-bottom:4px">Schnellanfrage</span>
+          <span style="display:block;font-size:.86rem;color:#9FACBA;line-height:1.55">In zwei Minuten ausgefüllt — ideal für einzelne Geräte oder die erste Kontaktaufnahme.</span>
+        </span>
       </button>
-      <button id="tab-konfig" onclick="switchTab('konfig')"
-        style="font-family:var(--display);font-size:.95rem;font-weight:600;background:none;border:0;border-bottom:2px solid transparent;color:var(--muted);padding:10px 22px 12px;cursor:pointer;margin-bottom:-1px">
-        Kalibrieranfrage konfigurieren
+
+      <button id="tab-konfig" onclick="switchTab('konfig')" type="button"
+        style="text-align:left;background:rgba(255,255,255,.04);border:1.5px solid var(--line-d);border-radius:11px;padding:20px 22px;cursor:pointer;transition:all .2s;display:flex;gap:14px;align-items:flex-start">
+        <span id="dot-konfig" style="width:22px;height:22px;border-radius:50%;border:2px solid var(--muted);display:inline-flex;align-items:center;justify-content:center;flex:none;margin-top:2px">
+          <span style="width:10px;height:10px;border-radius:50%;background:transparent"></span>
+        </span>
+        <span>
+          <span style="display:block;font-family:var(--display);font-weight:700;font-size:1.05rem;color:#fff;margin-bottom:4px">Geführter Konfigurator</span>
+          <span style="display:block;font-size:.86rem;color:#9FACBA;line-height:1.55">Schritt für Schritt — für mehrere Geräte und komplexe Aufträge mit vielen Positionen.</span>
+        </span>
       </button>
+
     </div>
 
     <!-- SCHNELLANFRAGE -->
@@ -1329,13 +1344,19 @@ document.getElementById('anfrage').addEventListener('submit',async function(e){
 function switchTab(t){
   document.getElementById('panel-schnell').style.display = t==='schnell'?'':'none';
   document.getElementById('panel-konfig').style.display  = t==='konfig' ?'':'none';
-  const qs=document.getElementById('tab-schnell');
-  const qk=document.getElementById('tab-konfig');
-  qs.style.borderBottomColor = t==='schnell'?'var(--blue-br)':'transparent';
-  qs.style.color             = t==='schnell'?'var(--blue-br)':'var(--muted)';
-  qk.style.borderBottomColor = t==='konfig' ?'var(--blue-br)':'transparent';
-  qk.style.color             = t==='konfig' ?'var(--blue-br)':'var(--muted)';
-  if(t==='konfig' && !window._kkInit){ window._kkInit=true; initKonfigurator(); }
+  var cs=document.getElementById('tab-schnell'), ck=document.getElementById('tab-konfig');
+  var ds=document.getElementById('dot-schnell'), dk=document.getElementById('dot-konfig');
+  // Schnellanfrage
+  cs.style.background    = t==='schnell'?'rgba(59,110,245,.12)':'rgba(255,255,255,.04)';
+  cs.style.borderColor   = t==='schnell'?'var(--blue-br)':'var(--line-d)';
+  ds.style.borderColor   = t==='schnell'?'var(--blue-br)':'var(--muted)';
+  ds.firstElementChild.style.background = t==='schnell'?'var(--blue-br)':'transparent';
+  // Konfigurator
+  ck.style.background    = t==='konfig'?'rgba(59,110,245,.12)':'rgba(255,255,255,.04)';
+  ck.style.borderColor   = t==='konfig'?'var(--blue-br)':'var(--line-d)';
+  dk.style.borderColor   = t==='konfig'?'var(--blue-br)':'var(--muted)';
+  dk.firstElementChild.style.background = t==='konfig'?'var(--blue-br)':'transparent';
+}
 }
 
 /* ═══════════════════════════════════════

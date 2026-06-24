@@ -1,10 +1,18 @@
-# robots.txt – west-kal.de
-# Alle Crawler erlaubt, Admin-Ordner sperren
+# robots.txt – se-basti.github.io (GitHub Pages Testumgebung)
+# ============================================================
+# WICHTIG: Suchmaschinen gesperrt solange die Seite noch nicht
+# auf systems-engineering-gmbh.de live ist.
+#
+# TODO NACH GO-LIVE: Diese Datei auf dem Live-Server (Suleitec)
+# so setzen:
+#   User-agent: *
+#   Allow: /
+#   Disallow: /admin/
+#   Disallow: /drafts/
+#   Sitemap: https://www.systems-engineering-gmbh.de/sitemap.xml
+#
+# Die GitHub-Version bleibt dauerhaft auf Disallow: /
+# ============================================================
 
 User-agent: *
-Allow: /
-Disallow: /admin/
-Disallow: /drafts/
-
-# Sitemap-Ort für Google & Bing
-Sitemap: https://www.west-kal.de/sitemap.xml
+Disallow: /

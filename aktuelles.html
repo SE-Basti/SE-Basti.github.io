@@ -369,44 +369,7 @@
 </section>
 <section class="block">
   <div class="wrap">
-    <div class="ngrid">
-      <article class="npost" itemscope itemtype="https://schema.org/Article">
-        <div class="top" style="background:var(--blue)"></div>
-        <div class="body">
-          <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
-            <span style="font-family:var(--mono);font-size:.68rem;background:rgba(11,83,240,.1);color:var(--blue);padding:2px 9px;border-radius:4px">Akkreditierung</span>
-            <span class="date" itemprop="datePublished">12. Juni 2026</span>
-          </div>
-          <h2 itemprop="headline" style="font-family:var(--display);font-weight:700;font-size:1.1rem;margin-bottom:10px;line-height:1.3">Erfolgreiche DAkkS-Überwachung 2026</h2>
-          <p itemprop="description" style="font-size:.91rem;color:var(--muted-d);line-height:1.7;flex:1">Unser Laboratorium hat die jährliche Begutachtung durch die DAkkS erneut erfolgreich bestanden — Ihre Kalibrierungen bleiben uneingeschränkt akkreditiert.</p>
-          <div class="foot" style="margin-top:16px"><a class="more" href="/news/dakks-ueberwachung-2026.html">Artikel lesen →</a></div>
-        </div>
-      </article>
-      <article class="npost" itemscope itemtype="https://schema.org/Article">
-        <div class="top" style="background:var(--blue)"></div>
-        <div class="body">
-          <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
-            <span style="font-family:var(--mono);font-size:.68rem;background:rgba(11,83,240,.1);color:var(--blue);padding:2px 9px;border-radius:4px">Labor</span>
-            <span class="date" itemprop="datePublished">28. Mai 2026</span>
-          </div>
-          <h2 itemprop="headline" style="font-family:var(--display);font-weight:700;font-size:1.1rem;margin-bottom:10px;line-height:1.3">Erweiterte Kapazitäten für Temperaturkalibrierung</h2>
-          <p itemprop="description" style="font-size:.91rem;color:var(--muted-d);line-height:1.7;flex:1">Mit zusätzlicher Ausstattung verkürzen wir die Durchlaufzeiten bei Pt100- und Thermoelement-Kalibrierungen weiter — ohne Abstriche bei der Messqualität.</p>
-          <div class="foot" style="margin-top:16px"><a class="more" href="/news/temperatur-kapazitaet.html">Artikel lesen →</a></div>
-        </div>
-      </article>
-      <article class="npost" itemscope itemtype="https://schema.org/Article">
-        <div class="top" style="background:var(--blue)"></div>
-        <div class="body">
-          <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
-            <span style="font-family:var(--mono);font-size:.68rem;background:rgba(11,83,240,.1);color:var(--blue);padding:2px 9px;border-radius:4px">Prüfmittel</span>
-            <span class="date" itemprop="datePublished">5. Mai 2026</span>
-          </div>
-          <h2 itemprop="headline" style="font-family:var(--display);font-weight:700;font-size:1.1rem;margin-bottom:10px;line-height:1.3">Kalibrierfristen rechtzeitig planen</h2>
-          <p itemprop="description" style="font-size:.91rem;color:var(--muted-d);line-height:1.7;flex:1">Ablaufende Kalibrierfristen sind vermeidbar. Wir zeigen wie Sie Ihr Prüfmittelmanagement einfach und revisionssicher organisieren.</p>
-          <div class="foot" style="margin-top:16px"><a class="more" href="/news/kalibrierfristen-planen.html">Artikel lesen →</a></div>
-        </div>
-      </article>
-    </div>
+    <div class="ngrid" id="newslist"><p style="color:var(--muted-d);font-size:.9rem">Beiträge werden geladen …</p></div>
   </div>
 </section>
 </main>
@@ -444,6 +407,38 @@
 <script>
 var b=document.querySelector(".burger"),m=document.querySelector(".menu");
 if(b&&m)b.addEventListener("click",function(){var o=m.style.display==="flex";m.style.display=o?"none":"flex";b.setAttribute("aria-expanded",String(!o));if(!o)Object.assign(m.style,{position:"absolute",top:"70px",left:"0",right:"0",flexDirection:"column",background:"var(--ink)",padding:"20px 24px",gap:"18px",borderBottom:"1px solid var(--line-d)"});});
+
+function renderNews(posts) {
+  var nl = document.getElementById("newslist");
+  if (!nl) return;
+  nl.innerHTML = "";
+  posts.forEach(function(p) {
+    var kat = p.kategorie || "Allgemein";
+    var a = document.createElement("article");
+    a.className = "npost";
+    a.setAttribute("itemscope","");
+    a.setAttribute("itemtype","https://schema.org/Article");
+    a.innerHTML = '<div class="top" style="background:var(--blue)"></div>'
+      + '<div class="body">'
+      + '<div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">'
+      + '<span style="font-family:var(--mono);font-size:.68rem;background:rgba(11,83,240,.1);color:var(--blue);padding:2px 9px;border-radius:4px">' + kat + '</span>'
+      + '<span class="date" itemprop="datePublished">' + p.datum + '</span>'
+      + '</div>'
+      + '<h2 itemprop="headline" style="font-family:var(--display);font-weight:700;font-size:1.1rem;margin-bottom:10px;line-height:1.3">' + p.titel + '</h2>'
+      + '<p itemprop="description" style="font-size:.91rem;color:var(--muted-d);line-height:1.7;flex:1">' + p.teaser + '</p>'
+      + '<div class="foot" style="margin-top:16px"><a class="more" href="/news/' + p.slug + '.html">Artikel lesen →</a></div>'
+      + '</div>';
+    nl.appendChild(a);
+  });
+}
+
+fetch("/news.json")
+  .then(function(r){ return r.ok ? r.json() : Promise.reject(); })
+  .then(function(posts){ renderNews(posts); })
+  .catch(function(){
+    var nl = document.getElementById("newslist");
+    if (nl) nl.innerHTML = '<p style="color:var(--muted-d)">Keine Beiträge gefunden.</p>';
+  });
 </script>
 </body>
 </html>

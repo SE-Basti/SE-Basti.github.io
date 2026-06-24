@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- ============================================================
-  sitemap.xml – west-kal.de
+  sitemap.xml – systems-engineering-gmbh.de
   Nach jedem neuen Beitrag / neuer Seite hier ergänzen.
   Bei Google Search Console einreichen: search.google.com/search-console
 ============================================================ -->
@@ -8,45 +8,45 @@
         xmlns:xhtml="http://www.w3.org/1999/xhtml">
 
   <url>
-    <loc>https://www.west-kal.de/</loc>
-    <xhtml:link rel="alternate" hreflang="de" href="https://www.west-kal.de/"/>
-    <xhtml:link rel="alternate" hreflang="fr" href="https://www.west-kal.de/index-fr.html"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://www.west-kal.de/index-en.html"/>
+    <loc>https://www.systems-engineering-gmbh.de/</loc>
+    <xhtml:link rel="alternate" hreflang="de" href="https://www.systems-engineering-gmbh.de/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.systems-engineering-gmbh.de/index-fr.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.systems-engineering-gmbh.de/index-en.html"/>
     <lastmod>2026-06-19</lastmod>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
   </url>
 
   <url>
-    <loc>https://www.west-kal.de/leistungen.html</loc>
+    <loc>https://www.systems-engineering-gmbh.de/leistungen.html</loc>
     <lastmod>2026-06-19</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.85</priority>
   </url>
 
   <url>
-    <loc>https://www.west-kal.de/akkreditierung.html</loc>
+    <loc>https://www.systems-engineering-gmbh.de/akkreditierung.html</loc>
     <lastmod>2026-06-19</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.85</priority>
   </url>
 
   <url>
-    <loc>https://www.west-kal.de/ueber-uns.html</loc>
+    <loc>https://www.systems-engineering-gmbh.de/ueber-uns.html</loc>
     <lastmod>2026-06-19</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.75</priority>
   </url>
 
   <url>
-    <loc>https://www.west-kal.de/impressum.html</loc>
+    <loc>https://www.systems-engineering-gmbh.de/impressum.html</loc>
     <lastmod>2026-06-19</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.2</priority>
   </url>
 
   <url>
-    <loc>https://www.west-kal.de/datenschutz.html</loc>
+    <loc>https://www.systems-engineering-gmbh.de/datenschutz.html</loc>
     <lastmod>2026-06-19</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.2</priority>
@@ -54,49 +54,56 @@
 
   <!-- News-Beiträge: nach jedem neuen Beitrag hier ergänzen -->
   <url>
-    <loc>https://www.west-kal.de/news/dakks-ueberwachung-2026.html</loc>
+    <loc>https://www.systems-engineering-gmbh.de/news/dakks-ueberwachung-2026.html</loc>
     <lastmod>2026-06-12</lastmod>
     <changefreq>never</changefreq>
     <priority>0.5</priority>
   </url>
 
   <url>
-    <loc>https://www.west-kal.de/news/temperatur-kapazitaet.html</loc>
+    <loc>https://www.systems-engineering-gmbh.de/news/temperatur-kapazitaet.html</loc>
     <lastmod>2026-05-28</lastmod>
     <changefreq>never</changefreq>
     <priority>0.5</priority>
   </url>
 
   <url>
-    <loc>https://www.west-kal.de/news/kalibrierfristen-planen.html</loc>
+    <loc>https://www.systems-engineering-gmbh.de/news/kalibrierfristen-planen.html</loc>
     <lastmod>2026-05-05</lastmod>
     <changefreq>never</changefreq>
     <priority>0.5</priority>
   </url>
 
   <url>
-    <loc>https://www.west-kal.de/einsenden.html</loc>
+    <loc>https://www.systems-engineering-gmbh.de/einsenden.html</loc>
     <lastmod>2026-06-19</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.7</priority>
   </url>
 
   <url>
-    <loc>https://www.west-kal.de/faq.html</loc>
+    <loc>https://www.systems-engineering-gmbh.de/geraete.html</loc>
+    <lastmod>2026-06-19</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://www.systems-engineering-gmbh.de/faq.html</loc>
     <lastmod>2026-06-19</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
 
   <url>
-    <loc>https://www.west-kal.de/aktuelles.html</loc>
+    <loc>https://www.systems-engineering-gmbh.de/aktuelles.html</loc>
     <lastmod>2026-06-19</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
 
   <url>
-    <loc>https://www.west-kal.de/agb.html</loc>
+    <loc>https://www.systems-engineering-gmbh.de/agb.html</loc>
     <lastmod>2026-06-19</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.2</priority>

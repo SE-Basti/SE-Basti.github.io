@@ -1,12 +1,20 @@
 [
   {
-  "datum": "24. Juni 2026",
-  "titel": "Digitaler Kalibrierschein: DAkkS modernisiert die Urkundenausstellung",
-  "teaser": "Die DAkkS führt den digitalen Kalibrierschein ein – ein wichtiger Schritt für die Rückverfolgbarkeit und Prozesseffizienz in akkreditierten Laboratorien.",
-  "volltext": "Im Zuge der Digitalisierung des Akkreditierungswesens ermöglicht die Deutsche Akkreditierungsstelle (DAkkS) akkreditierten Kalibrierlaboratorien nun die Ausstellung digitaler Kalibrierscheine gemäß DIN EN ISO/IEC 17025...",
-  "slug": "digitaler-kalibrierschein-dakks-modernisiert-die-u",
-  "kategorie": "Akkreditierung"
-},
+    "datum": "24. Juni 2026",
+    "titel": "Überwachungsaudit 2026 erfolgreich bestanden",
+    "teaser": "Unser Kalibrierlaboratorium hat das jährliche Überwachungsaudit der DAkkS erfolgreich abgeschlossen — die Akkreditierung nach DIN EN ISO/IEC 17025 bleibt vollumfänglich bestehen.",
+    "volltext": "Im Rahmen der regelmäßigen Überwachung durch die Deutsche Akkreditierungsstelle (DAkkS) wurde unser Kalibrierlaboratorium erneut begutachtet. Wir freuen uns, dass das Überwachungsaudit 2026 erfolgreich abgeschlossen wurde und unsere Akkreditierung nach DIN EN ISO/IEC 17025 ohne Einschränkungen fortbesteht.\n\nDie Begutachtung umfasste die technische Kompetenz unserer Mitarbeiter, die Rückführbarkeit unserer Messungen auf nationale Normale sowie die Wirksamkeit unseres Qualitätsmanagementsystems. Alle geprüften Bereiche wurden als konform bewertet.\n\nDamit behalten alle bei uns ausgestellten Kalibrierscheine unter den Akkreditierungsnummern D-K-19425-01-01 (elektrische Messgrößen) und D-K-19425-01-02 (Temperatur) ihre uneingeschränkte Gültigkeit. Wir danken unseren Kunden für ihr Vertrauen.",
+    "slug": "ueberwachungsaudit-2026-bestanden",
+    "kategorie": "Akkreditierung"
+  },
+  {
+    "datum": "24. Juni 2026",
+    "titel": "Digitaler Kalibrierschein: DAkkS modernisiert die Urkundenausstellung",
+    "teaser": "Die DAkkS führt den digitalen Kalibrierschein ein – ein wichtiger Schritt für die Rückverfolgbarkeit und Prozesseffizienz in akkreditierten Laboratorien.",
+    "volltext": "Im Zuge der Digitalisierung des Akkreditierungswesens ermöglicht die Deutsche Akkreditierungsstelle (DAkkS) akkreditierten Kalibrierlaboratorien nun die Ausstellung digitaler Kalibrierscheine gemäß DIN EN ISO/IEC 17025...",
+    "slug": "digitaler-kalibrierschein-dakks-modernisiert-die-u",
+    "kategorie": "Akkreditierung"
+  },
   {
     "datum": "12. Juni 2026",
     "titel": "Erfolgreiche DAkkS-Überwachung 2026",

@@ -1,0 +1,27 @@
+name: Deploy zu Suleitec
+
+on:
+  workflow_dispatch:  # manuell per Knopfdruck auslösen
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Repository auschecken
+        uses: actions/checkout@v4
+
+      - name: FTP Upload zu Suleitec (Testordner)
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_HOST }}
+          username: ${{ secrets.FTP_USER }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: ./
+          server-dir: /systemde/test/
+          exclude: |
+            **/.git*
+            **/.git*/**
+            .github/**
+            README.md
+            *.md

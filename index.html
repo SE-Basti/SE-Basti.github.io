@@ -334,6 +334,8 @@
   .field.full{grid-column:1/-1}
   label{display:block;font-family:var(--mono);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:7px}
   input,select,textarea{width:100%;background:rgba(255,255,255,.06);border:1px solid var(--line-d);border-radius:6px;color:#fff;font-family:var(--body);font-size:.95rem;padding:11px 13px}
+  input[type=radio],input[type=checkbox]{width:auto;flex:none;padding:0;margin:0;accent-color:var(--blue-br)}
+  #kk-root label{display:block;font-family:var(--body);font-size:1rem;letter-spacing:normal;text-transform:none;color:inherit;margin:0}
   input:focus,textarea:focus{outline:2px solid var(--blue-br);outline-offset:-1px}
   select{cursor:pointer}
   select option{color:#000}
@@ -527,7 +529,7 @@
     <p class="lead">Akkreditiertes Kalibrierlaboratorium für elektrische und thermodynamische Messgrößen in Stolberg / Rheinland. Inhabergeführt seit 1993 – in unserem Labor und bei Ihnen vor Ort.</p>
     <div class="cta-row">
       <a class="btn btn-primary" href="#kontakt">Kalibrierauftrag anfragen →</a>
-      <a class="btn btn-ghost" href="#leistungen">Leistungen ansehen</a>
+      <a class="btn btn-ghost" href="/leistungen.html">Leistungen ansehen</a>
     </div>
     <div class="gauge" role="img" aria-label="Beispiel-Kalibrierwert: DC-Spannung 10,0002 V, Abweichung +0,2 mV – in Toleranz">
       <div class="read">
@@ -737,49 +739,21 @@
       </div>
     </div>
 
-  </div>
-</section>
-
-
-
-<!-- LEISTUNGEN -->
-<section class="block" id="leistungen" aria-labelledby="h-leistungen">
-  <div class="wrap">
-    <div class="lead-head">
-      <div>
-        <div class="tag">Leistungen</div>
-        <h2 id="h-leistungen">Was wir für Sie tun</h2>
+    <!-- ALLE LEISTUNGEN IM DETAIL -->
+    <div style="margin-top:20px;background:#fff;border:1px solid var(--line-l);border-radius:11px;padding:24px 26px;display:flex;gap:24px;align-items:center;justify-content:space-between;flex-wrap:wrap">
+      <div style="flex:1;min-width:260px">
+        <h3 style="font-family:var(--display);font-weight:700;font-size:1.05rem;margin-bottom:6px;color:var(--ink)">Alle Leistungen im Detail</h3>
+        <p style="color:var(--muted-d);font-size:.9rem;line-height:1.7;margin:0">
+          DAkkS- und Werkskalibrierung, Kalibrierung vor Ort, Prüfmittelmanagement in calServer, Justage &amp; Reparatur, Sondermessungen sowie Hol- und Bringservice — mit Messgrößen, Bereichen und Ablauf.
+        </p>
       </div>
-      <a href="/leistungen.html" style="font-family:var(--display);font-weight:600;font-size:.92rem;color:var(--blue);text-decoration:none;white-space:nowrap;align-self:flex-end">Alle Leistungen im Detail →</a>
+      <a class="btn btn-primary" href="/leistungen.html" style="white-space:nowrap;flex:none">Leistungen ansehen →</a>
     </div>
-    <div class="grid3">
-      <article class="card" style="border-top:3px solid var(--blue)">
-        <h3>DAkkS-Kalibrierung</h3>
-        <p>International anerkannt · rückführbar auf SI · mit dokumentierter Messunsicherheit nach ISO/IEC 17025.</p>
-      </article>
-      <article class="card" style="border-top:3px solid var(--blue)">
-        <h3>Werkskalibrierung</h3>
-        <p>Schnell, wirtschaftlich, ohne Akkreditierungspflicht — ideal für interne Überwachungsaufgaben.</p>
-      </article>
-      <article class="card" style="border-top:3px solid var(--blue)">
-        <h3>Kalibrierung vor Ort</h3>
-        <p>Unsere Techniker kommen zu Ihnen — auch DAkkS-akkreditiert, kein Produktionsausfall.</p>
-      </article>
-      <article class="card" style="border-top:3px solid var(--blue)">
-        <h3>Prüfmittelmanagement</h3>
-        <p>Fristenkontrolle, Erinnerungsservice und Komplettdokumentation — alles in calServer.</p>
-      </article>
-      <article class="card" style="border-top:3px solid var(--blue)">
-        <h3>Justage &amp; Reparatur</h3>
-        <p>Gerät außerhalb der Toleranz? Wir justieren und kalibrieren anschließend — aus einer Hand.</p>
-      </article>
-      <article class="card" style="border-top:3px solid var(--blue)">
-        <h3>Hol- &amp; Bringservice</h3>
-        <p>Auf Anfrage deutschlandweit — für Kunden in NRW besonders kurze Wege und wirtschaftliche Konditionen.</p>
-      </article>
-    </div>
+
   </div>
 </section>
+
+
 
 <!-- OUT OF TOLERANCE / LABORAUSSTATTUNG -->
 <section class="block" style="background:var(--paper)" aria-labelledby="h-oot">
@@ -1375,13 +1349,15 @@ function initKonfigurator(){
   }
 
   function rcard(name,val,label,sub,sel,fn){
-    var bg=sel?'rgba(59,123,255,.14)':'rgba(255,255,255,.04)';
+    var bg=sel?'rgba(59,123,255,.16)':'rgba(255,255,255,.04)';
     var bc=sel?'1.5px solid var(--blue-br)':'1px solid var(--line-d)';
-    return '<label style="display:flex;align-items:flex-start;gap:12px;padding:11px 14px;background:'+bg
-      +';border:'+bc+';border-radius:7px;cursor:pointer;margin-bottom:8px">'
-      +'<input type="radio" name="kk-'+name+'" value="'+val+'" '+(sel?'checked':'')+' onchange="'+fn+'(\''+val+'\')" style="accent-color:var(--blue-br);margin-top:3px;flex:none">'
-      +'<div><div style="font-family:var(--display);font-weight:600;font-size:.92rem;color:#fff">'+label+'</div>'
-      +'<div style="font-size:.82rem;color:var(--muted);margin-top:2px">'+sub+'</div></div></label>';
+    return '<label style="display:block;padding:13px 15px;background:'+bg
+      +';border:'+bc+';border-radius:8px;cursor:pointer;margin:0;text-transform:none;letter-spacing:normal;font-family:var(--body);transition:background .15s,border-color .15s">'
+      +'<span style="display:flex;align-items:center;gap:9px">'
+      +'<input type="radio" name="kk-'+name+'" value="'+val+'" '+(sel?'checked':'')+' onchange="'+fn+'(\''+val+'\')" style="width:auto;flex:none;margin:0;accent-color:var(--blue-br)">'
+      +'<span style="font-family:var(--display);font-weight:600;font-size:.92rem;color:#fff;line-height:1.25">'+label+'</span></span>'
+      +'<span style="display:block;font-size:.8rem;color:var(--muted);line-height:1.5;margin-top:5px;padding-left:24px">'+sub+'</span>'
+      +'</label>';
   }
 
   window.kkRender=function(){
@@ -1439,6 +1415,7 @@ function initKonfigurator(){
 
     if(KK.step===2){
       inner='<div style="font-family:var(--mono);font-size:.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px">Durchführung</div>'
+        +'<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px;margin-bottom:16px">'
         +rcard('ort','Labor','In unserem Labor','Einsendung · Standard 7–10 Werktage',KK.kal.ort==='Labor','kkSetOrt')
         +rcard('ort','VorOrt','Vor Ort bei Ihnen','Unsere Techniker kommen zu Ihnen',KK.kal.ort==='VorOrt','kkSetOrt')
         +rcard('ort','Abholung','Abholung gewünscht','Wir holen Ihre Geräte ab',KK.kal.ort==='Abholung','kkSetOrt')
@@ -1459,8 +1436,8 @@ function initKonfigurator(){
         +'</div>'
         +'<div style="margin-top:12px"><div style="font-family:var(--mono);font-size:.7rem;color:var(--muted);margin-bottom:5px;text-transform:uppercase;letter-spacing:.08em">Nachricht (optional)</div>'
         +'<textarea oninput="kkSetNachricht(this.value)" rows="2" placeholder="Weitere Hinweise …" style="background:rgba(255,255,255,.07);border:1px solid var(--line-d);border-radius:6px;color:#fff;font-size:.92rem;padding:9px 12px;width:100%;resize:vertical">'+KK.kon.nachricht+'</textarea></div>'
-        +'<label style="display:flex;gap:10px;align-items:flex-start;margin-top:12px;font-size:.88rem;color:var(--muted);cursor:pointer">'
-        +'<input type="checkbox" '+(KK.kon.consent?'checked':'')+' onchange="kkSetConsent(this.checked)" style="accent-color:var(--blue-br);flex:none;margin-top:2px">'
+        +'<label style="display:flex;gap:10px;align-items:flex-start;margin-top:14px;font-size:.88rem;line-height:1.55;color:var(--muted);cursor:pointer;text-transform:none;letter-spacing:normal;font-family:var(--body)">'
+        +'<input type="checkbox" '+(KK.kon.consent?'checked':'')+' onchange="kkSetConsent(this.checked)" style="width:auto;accent-color:var(--blue-br);flex:none;margin:3px 0 0">'
         +'<span>Ich bin mit der Verarbeitung meiner Angaben einverstanden (<a href="/datenschutz.html" style="color:var(--blue-br)">Datenschutz</a>). *</span></label>';
     }
 
@@ -1470,7 +1447,9 @@ function initKonfigurator(){
 
     var nextBtn=KK.step<3
       ? '<button onclick="kkGoStep('+(KK.step+1)+')" '+(KK.step===1&&!hasG?'disabled':'')+' style="padding:10px 24px;background:var(--blue);border:0;border-radius:6px;font-family:var(--display);font-weight:600;color:#fff;cursor:pointer;opacity:'+(KK.step===1&&!hasG?.4:1)+'">Weiter →</button>'
-      : '<button onclick="kkSubmit()" '+(canS?'':'disabled')+' style="padding:10px 24px;background:var(--signal);border:0;border-radius:6px;font-family:var(--display);font-weight:600;color:var(--ink);cursor:pointer;opacity:'+(canS?1:.4)+'">Anfrage erstellen →</button>';
+      : '<div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;justify-content:flex-end">'
+        +(canS?'':'<span style="font-size:.8rem;color:var(--muted);font-family:var(--body)">Name, E-Mail und Einwilligung erforderlich</span>')
+        +'<button onclick="kkSubmit()" '+(canS?'':'disabled')+' style="padding:10px 24px;background:var(--signal);border:0;border-radius:6px;font-family:var(--display);font-weight:600;color:var(--ink);cursor:'+(canS?'pointer':'not-allowed')+';opacity:'+(canS?1:.55)+'">Anfrage erstellen →</button></div>';
 
     root.innerHTML='<div style="background:var(--ink-2);border:1px solid var(--line-d);border-radius:11px;padding:26px 28px">'
       +stepBar()+inner

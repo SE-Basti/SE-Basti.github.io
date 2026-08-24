@@ -1572,5 +1572,36 @@ function initKonfigurator(){
   <option value="Rigol DS1054Z">
   <option value="Rigol DS1104Z">
 </datalist>
+
+<!-- Sticky "Jetzt anfragen" Button -->
+<a href="#kontakt" id="sticky-cta" aria-label="Jetzt Kalibrierung anfragen" style="position:fixed;bottom:24px;right:24px;z-index:90;display:inline-flex;align-items:center;gap:8px;background:var(--blue,#0B53F0);color:#fff;font-family:var(--display,'Archivo',sans-serif);font-weight:600;font-size:.92rem;padding:13px 22px;border-radius:30px;box-shadow:0 4px 16px rgba(11,83,240,.35);text-decoration:none;transition:opacity .3s,transform .3s,background .15s">
+  <span style="width:8px;height:8px;border-radius:50%;background:var(--signal,#18C29A);flex:none"></span>
+  Jetzt anfragen
+</a>
+<style>
+#sticky-cta:hover{background:var(--blue-dk,#0A3FBE);transform:translateY(-2px)}
+#sticky-cta.hidden{opacity:0;visibility:hidden;transform:translateY(20px)}
+@media(max-width:560px){#sticky-cta{bottom:16px;right:16px;padding:11px 18px;font-size:.85rem}}
+</style>
+<script>
+(function(){
+  var cta=document.getElementById('sticky-cta');
+  var kontakt=document.getElementById('kontakt');
+  var footer=document.querySelector('footer');
+  if(!cta)return;
+  function check(){
+    var hide=false;
+    [kontakt,footer].forEach(function(el){
+      if(el){var r=el.getBoundingClientRect();if(r.top<window.innerHeight&&r.bottom>0)hide=true;}
+    });
+    if(window.scrollY<300)hide=true;
+    cta.classList.toggle('hidden',hide);
+  }
+  window.addEventListener('scroll',check,{passive:true});
+  window.addEventListener('resize',check,{passive:true});
+  check();
+})();
+</script>
+
 </body>
 </html>

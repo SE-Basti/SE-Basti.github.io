@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <!-- SEO: Meta-Tags -->
-<title>Akkreditierte Kalibrierung (DAkkS) Stolberg | Systems Engineering – ISO 17025 seit 1994</title>
+<title>DAkkS-Kalibrierung Stolberg | Systems Engineering – ISO 17025 seit 1994</title>
 <meta name="description" content="Kalibrierlaboratorium für elektrische Messgrößen und Temperatur in Stolberg. Elektrische Messgrößen und Temperatur kalibrieren lassen – inhouse & vor Ort. Seit 1994 akkreditiert.">
 <meta name="keywords" content="Kalibrierung, Kalibrierlaboratorium, DAkkS, ISO 17025, elektrische Messgrößen, Temperatur, Stolberg, Aachen, NRW, Prüfmittelmanagement, DKD">
 <meta name="robots" content="index, follow">
@@ -21,7 +21,7 @@
 <!-- Open Graph / LinkedIn / Facebook Preview -->
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://www.systems-engineering-gmbh.de/">
-<meta property="og:title" content="Akkreditierte Kalibrierung (DAkkS) Stolberg | Systems Engineering">
+<meta property="og:title" content="DAkkS-Kalibrierung Stolberg | Systems Engineering">
 <meta property="og:description" content="Kalibrierlaboratorium für elektrische Messgrößen und Temperatur. Seit 1994 akkreditiert. Inhouse & vor Ort.">
 <meta property="og:image" content="https://www.systems-engineering-gmbh.de/og-image.jpg"><!-- TODO: OG-Bild erstellen, 1200×630px -->
 <meta property="og:locale" content="de_DE">
@@ -29,7 +29,7 @@
 
 <!-- Twitter Card -->
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Akkreditierte Kalibrierung (DAkkS) | Systems Engineering Stolberg">
+<meta name="twitter:title" content="DAkkS-Kalibrierung | Systems Engineering Stolberg">
 <meta name="twitter:description" content="ISO 17025 akkreditiertes Kalibrierlabor seit 1994 – elektrische Messgrößen und Temperatur.">
 <meta name="twitter:image" content="https://www.systems-engineering-gmbh.de/og-image.jpg">
 
@@ -1125,7 +1125,7 @@ function switchTab(t){
 function initKonfigurator(){
   if(window.KK){kkRender();return;}
   window.KK={
-    step:1, geraete:[], addKat:'kalibratoren',
+    step:1, geraete:[], addKat:'', autoKat:false, err:'', focusMod:false,
     kal:{art:'DAkkS',ort:'Labor',termin:'',anmerkung:''},
     kon:{firma:'',name:'',email:'',telefon:'',nachricht:'',consent:false},
     done:false, copied:false, showRaw:false
@@ -1152,6 +1152,82 @@ function initKonfigurator(){
 
   window.kkKatLabel=function(id){return(KATS.find(function(k){return k.id===id;})||{label:id}).label;};
 
+  /* ── Kategorie automatisch aus geraete.json erkennen ──
+     geraete.json ist die einzige Datenquelle (build.py erzeugt daraus
+     Geräteliste und Autocomplete). Kommt die Liste später aus einem
+     anderen System, muss nur diese Datei neu erzeugt werden. */
+  window.kkNorm=function(v){return String(v||'').toLowerCase().replace(/[^a-z0-9]/g,'');};
+  window.KKKAT=null;
+  fetch('/geraete.json').then(function(r){return r.ok?r.json():Promise.reject();}).then(function(list){
+    window.KKKAT=list.map(function(g){
+      return {full:kkNorm(g.hersteller+g.modell),her:kkNorm(g.hersteller),mod:kkNorm(g.modell),kat:g.kat};
+    });
+    var seen={};
+    window.KKHER=[];
+    window.KKKAT.forEach(function(d){if(d.her&&!seen[d.her]){seen[d.her]=1;window.KKHER.push(d.her);}});
+    window.KKHER.sort(function(a,b){return b.length-a.length;});
+  }).catch(function(){window.KKKAT=null;});
+
+  window.kkDetectKat=function(text){
+    var L=window.KKKAT;
+    if(!L||!text)return '';
+    var n=kkNorm(text);
+    if(n.length<3)return '';
+    var i,kat;
+
+    /* 1) Hersteller + Modell stehen beide im Text → sicherer Treffer */
+    var best='',bestLen=0;
+    for(i=0;i<L.length;i++){
+      if(L[i].full&&L[i].full.length>bestLen&&n.indexOf(L[i].full)>-1){best=L[i].kat;bestLen=L[i].full.length;}
+    }
+    if(best)return best;
+
+    /* 2) Bekannter Hersteller genannt → nur innerhalb dieser Marke suchen,
+          damit z. B. „Testo 175" nicht über „Fluke 175" einsortiert wird */
+    var her='',H=window.KKHER||[];
+    for(i=0;i<H.length;i++){ if(n.indexOf(H[i])>-1){her=H[i];break;} }
+    if(her){
+      kat='';
+      for(i=0;i<L.length;i++){
+        if(L[i].her===her&&L[i].mod.length>=3&&n.indexOf(L[i].mod)>-1){
+          if(!kat)kat=L[i].kat; else if(kat!==L[i].kat)return '';
+        }
+      }
+      if(kat)return kat;
+      /* Modell unbekannt: nur raten, wenn die Marke bei uns eindeutig ist */
+      kat='';
+      for(i=0;i<L.length;i++){
+        if(L[i].her===her){ if(!kat)kat=L[i].kat; else if(kat!==L[i].kat)return ''; }
+      }
+      return kat;
+    }
+
+    /* 3) Kein Hersteller genannt → eindeutiger Modelltreffer genügt */
+    kat='';
+    for(i=0;i<L.length;i++){
+      if(L[i].mod.length>=3&&n.indexOf(L[i].mod)>-1){
+        if(!kat)kat=L[i].kat; else if(kat!==L[i].kat)return '';
+      }
+    }
+    return kat;
+  };
+
+  window.kkPaintKats=function(){
+    KATS.forEach(function(k){
+      var el=document.getElementById('kk-kat-'+k.id);
+      if(!el)return;
+      var sel=KK.addKat===k.id;
+      el.style.background=sel?'rgba(59,123,255,.18)':'rgba(255,255,255,.04)';
+      el.style.border=sel?'1.5px solid var(--blue-br)':'1px solid var(--line-d)';
+      el.style.color=sel?'var(--blue-br)':'#C4CFDB';
+      el.style.fontWeight=sel?'700':'500';
+    });
+    var h=document.getElementById('kk-kat-hint');
+    if(h)h.textContent=KK.autoKat?'automatisch erkannt':'';
+    var e=document.getElementById('kk-err');
+    if(e){e.textContent=KK.err||'';e.style.display=KK.err?'block':'none';}
+  };
+
   window.kkBuildEmail=function(){
     var k=KK.kon,kal=KK.kal;
     var artMap={DAkkS:'Akkreditierte Kalibrierung (DAkkS)',Werk:'Werkskalibrierung',unklar:'Noch unklar'};
@@ -1175,7 +1251,7 @@ function initKonfigurator(){
       +(k.nachricht?'\n\n== NACHRICHT ==\n'+line+'\n'+k.nachricht:'');
   };
 
-  window.kkSetKat=function(id){KK.addKat=id;kkRender();};
+  window.kkSetKat=function(id){KK.addKat=(KK.addKat===id?'':id);KK.autoKat=false;KK.err='';kkPaintKats();};
   window.kkSetArt=function(v){KK.kal.art=v;kkRender();};
   window.kkSetOrt=function(v){KK.kal.ort=v;kkRender();};
   window.kkSetTermin=function(v){KK.kal.termin=v;};
@@ -1193,8 +1269,11 @@ function initKonfigurator(){
     var m=(mod&&mod.value||'').trim();
     var a=parseInt(anz&&anz.value)||1;
     var ka=(art&&art.value)||'DAkkS';
-    if(!m)return;
-    KK.geraete.push({kat:KK.addKat,modell:m,anzahl:a,art:ka});
+    if(!m){KK.err='Bitte Hersteller, Typ oder Modell eingeben.';kkPaintKats();if(mod)mod.focus();return;}
+    var kat=kkDetectKat(m)||KK.addKat;
+    if(!kat){KK.err='Gerät nicht in unserer Liste — bitte Kategorie auswählen.';kkPaintKats();return;}
+    KK.geraete.push({kat:kat,modell:m,anzahl:a,art:ka});
+    KK.addKat='';KK.autoKat=false;KK.err='';KK.focusMod=true;
     kkRender();
   };
   window.kkDel=function(i){KK.geraete.splice(i,1);kkRender();};
@@ -1207,7 +1286,7 @@ function initKonfigurator(){
     });
   };
   window.kkReset=function(){
-    KK.step=1;KK.geraete=[];KK.addKat='kalibratoren';
+    KK.step=1;KK.geraete=[];KK.addKat='';KK.autoKat=false;KK.err='';
     KK.kal={art:'DAkkS',ort:'Labor',termin:'',anmerkung:''};
     KK.kon={firma:'',name:'',email:'',telefon:'',nachricht:'',consent:false};
     KK.done=false;KK.copied=false;KK.showRaw=false;kkRender();
@@ -1332,21 +1411,24 @@ function initKonfigurator(){
     var inner='';
 
     if(KK.step===1){
-      inner='<div style="font-family:var(--mono);font-size:.7rem;letter-spacing:.1em;color:var(--muted);text-transform:uppercase;margin-bottom:10px">Gerätekategorie</div>'
-        +'<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px">'
+      inner='<div style="display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:10px">'
+        +'<span style="font-family:var(--mono);font-size:.7rem;letter-spacing:.1em;color:var(--muted);text-transform:uppercase">Gerätekategorie</span>'
+        +'<span id="kk-kat-hint" style="font-family:var(--mono);font-size:.68rem;color:var(--signal)">'+(KK.autoKat?'automatisch erkannt':'')+'</span></div>'
+        +'<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(132px,1fr));gap:8px;margin-bottom:16px">'
         +KATS.map(function(k){
           var sel=KK.addKat===k.id;
-          return '<button onclick="kkSetKat(\''+k.id+'\')" style="background:'+(sel?'rgba(59,123,255,.18)':'rgba(255,255,255,.04)')+';border:'+(sel?'1.5px solid var(--blue-br)':'1px solid var(--line-d)')+';border-radius:7px;padding:9px 10px;cursor:pointer;text-align:left;color:'+(sel?'var(--blue-br)':'#C4CFDB')+';font-family:var(--body);font-size:.84rem;font-weight:'+(sel?'700':'500')+';transition:all .15s;line-height:1.35">'+k.label+'</button>';
+          return '<button id="kk-kat-'+k.id+'" onclick="kkSetKat(\''+k.id+'\')" style="background:'+(sel?'rgba(59,123,255,.18)':'rgba(255,255,255,.04)')+';border:'+(sel?'1.5px solid var(--blue-br)':'1px solid var(--line-d)')+';border-radius:7px;padding:9px 10px;cursor:pointer;text-align:left;color:'+(sel?'var(--blue-br)':'#C4CFDB')+';font-family:var(--body);font-size:.84rem;font-weight:'+(sel?'700':'500')+';transition:all .15s;line-height:1.35">'+k.label+'</button>';
         }).join('')+'</div>'
         +'<div style="background:rgba(255,255,255,.04);border-radius:8px;padding:14px 16px;display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap;margin-bottom:14px">'
         +'<div style="flex:2;min-width:160px"><div style="font-family:var(--mono);font-size:.7rem;color:var(--muted);margin-bottom:5px;text-transform:uppercase;letter-spacing:.08em">Hersteller / Typ / Modell</div>'
-        +'<input id="kk-mod" type="text" placeholder="z. B. Fluke 87V" style="background:rgba(255,255,255,.07);border:1px solid var(--line-d);border-radius:6px;color:#fff;font-size:.92rem;padding:9px 12px;width:100%" onkeydown="if(event.key===\'Enter\')kkAdd()"></div>'
+        +'<input id="kk-mod" type="text" list="geraete-list" autocomplete="off" placeholder="z. B. Fluke 87V" style="background:rgba(255,255,255,.07);border:1px solid var(--line-d);border-radius:6px;color:#fff;font-size:.92rem;padding:9px 12px;width:100%" onkeydown="if(event.key===\'Enter\')kkAdd()"></div>'
         +'<div style="flex:1.4;min-width:150px"><div style="font-family:var(--mono);font-size:.7rem;color:var(--muted);margin-bottom:5px;text-transform:uppercase;letter-spacing:.08em">Kalibrierart</div>'
         +'<select id="kk-art" style="background:rgba(255,255,255,.07);border:1px solid var(--line-d);border-radius:6px;color:#fff;font-size:.92rem;padding:9px 12px;width:100%;cursor:pointer"><option value="DAkkS">Akkreditierte Kalibrierung (DAkkS)</option><option value="Werk">Werkskalibrierung</option><option value="Offen">Bitte beraten</option></select></div>'
         +'<div><div style="font-family:var(--mono);font-size:.7rem;color:var(--muted);margin-bottom:5px;text-transform:uppercase;letter-spacing:.08em">Anzahl</div>'
         +'<input id="kk-anz" type="number" min="1" value="1" style="background:rgba(255,255,255,.07);border:1px solid var(--line-d);border-radius:6px;color:#fff;font-size:.92rem;padding:9px 12px;width:72px"></div>'
         +'<button onclick="kkAdd()" style="padding:9px 18px;background:var(--blue);border:0;border-radius:6px;font-family:var(--display);font-weight:600;color:#fff;cursor:pointer;white-space:nowrap;flex:none">+ Hinzufügen</button>'
         +'</div>'
+        +'<div id="kk-err" style="display:'+(KK.err?'block':'none')+';font-size:.83rem;color:#FFB4A2;margin:-6px 0 12px">'+(KK.err||'')+'</div>'
         +(hasG
           ? KK.geraete.map(function(g,i){
               return '<div style="display:flex;align-items:center;gap:10px;padding:9px 12px;background:rgba(255,255,255,.04);border:1px solid var(--line-d);border-radius:7px;margin-bottom:6px">'
@@ -1402,6 +1484,19 @@ function initKonfigurator(){
       +stepBar()+inner
       +'<div style="display:flex;justify-content:space-between;margin-top:20px">'+prevBtn+nextBtn+'</div>'
       +'</div>';
+
+    if(KK.step===1){
+      var modEl=document.getElementById('kk-mod');
+      if(modEl){
+        modEl.addEventListener('input',function(){
+          var k=kkDetectKat(this.value);
+          if(k){KK.addKat=k;KK.autoKat=true;KK.err='';}
+          else if(KK.autoKat){KK.addKat='';KK.autoKat=false;}
+          kkPaintKats();
+        });
+        if(KK.focusMod){KK.focusMod=false;modEl.focus();}
+      }
+    }
   };
 
   kkRender();

@@ -919,83 +919,12 @@
   <div class="wrap" style="padding-top:40px">
     <div class="lead-head">
       <div><div class="tag">Kontakt</div><h2 id="h-kontakt" style="color:#fff">Kalibrieranfrage stellen</h2></div>
-      <p style="color:#9FACBA">Ob einzelnes Messmittel oder komplettes Prüfmittelmanagement — wir finden den passenden Weg.</p>
+      <p style="color:#9FACBA">Suchen Sie Ihre Geräte heraus, ergänzen Sie Ihre Angaben — den Rest klären wir mit Ihnen. Ob einzelnes Messmittel oder komplettes Prüfmittelmanagement.</p>
     </div>
 
-    <!-- ANFRAGE-WAHL -->
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:32px">
+    <div id="kk-root"></div>
 
-      <button id="tab-schnell" onclick="switchTab('schnell')" type="button"
-        style="text-align:left;background:rgba(59,110,245,.12);border:1.5px solid var(--blue-br);border-radius:11px;padding:20px 22px;cursor:pointer;transition:all .2s;display:flex;gap:14px;align-items:flex-start">
-        <span id="dot-schnell" style="width:22px;height:22px;border-radius:50%;border:2px solid var(--blue-br);display:inline-flex;align-items:center;justify-content:center;flex:none;margin-top:2px">
-          <span style="width:10px;height:10px;border-radius:50%;background:var(--blue-br)"></span>
-        </span>
-        <span>
-          <span style="display:block;font-family:var(--display);font-weight:700;font-size:1.05rem;color:#fff;margin-bottom:4px">Schnellanfrage</span>
-          <span style="display:block;font-size:.86rem;color:#9FACBA;line-height:1.55">In zwei Minuten ausgefüllt — ideal für einzelne Geräte oder die erste Kontaktaufnahme.</span>
-        </span>
-      </button>
 
-      <button id="tab-konfig" onclick="switchTab('konfig')" type="button"
-        style="text-align:left;background:rgba(255,255,255,.04);border:1.5px solid var(--line-d);border-radius:11px;padding:20px 22px;cursor:pointer;transition:all .2s;display:flex;gap:14px;align-items:flex-start">
-        <span id="dot-konfig" style="width:22px;height:22px;border-radius:50%;border:2px solid var(--muted);display:inline-flex;align-items:center;justify-content:center;flex:none;margin-top:2px">
-          <span style="width:10px;height:10px;border-radius:50%;background:transparent"></span>
-        </span>
-        <span>
-          <span style="display:block;font-family:var(--display);font-weight:700;font-size:1.05rem;color:#fff;margin-bottom:4px">Mehrere Geräte erfassen</span>
-          <span style="display:block;font-size:.86rem;color:#9FACBA;line-height:1.55">Schritt für Schritt — für mehrere Geräte und komplexe Aufträge mit vielen Positionen.</span>
-        </span>
-      </button>
-
-    </div>
-
-    <!-- SCHNELLANFRAGE -->
-    <div id="panel-schnell">
-      <form class="form" id="anfrage" novalidate>
-          <div class="frow">
-            <div class="field"><label for="f-name">Name *</label><input id="f-name" name="name" autocomplete="name" required></div>
-            <div class="field"><label for="f-firma">Firma</label><input id="f-firma" name="firma" autocomplete="organization"></div>
-          </div>
-          <div class="frow">
-            <div class="field"><label for="f-email">E-Mail *</label><input id="f-email" type="email" name="email" autocomplete="email" required></div>
-            <div class="field"><label for="f-tel">Telefon</label><input id="f-tel" type="tel" name="telefon" autocomplete="tel"></div>
-          </div>
-          <div class="field full">
-            <label>Art der Kalibrierung</label>
-            <div class="seg" role="radiogroup">
-              <label><input type="radio" name="art" value="DAkkS" checked> Akkreditierte Kalibrierung (DAkkS)</label>
-              <label><input type="radio" name="art" value="Werk"> Werkskalibrierung</label>
-              <label><input type="radio" name="art" value="unklar"> noch offen</label>
-            </div>
-          </div>
-          <div class="field full">
-            <label>Durchführung</label>
-            <div class="seg" role="radiogroup">
-              <label><input type="radio" name="ort" value="Labor" checked> In unserem Labor</label>
-              <label><input type="radio" name="ort" value="VorOrt"> Vor Ort bei Ihnen</label>
-              <label><input type="radio" name="ort" value="Abholung"> Abholung gewünscht</label>
-            </div>
-          </div>
-          <div class="frow">
-            <div class="field"><label for="f-geraet">Gerät / Hersteller / Typ</label><input id="f-geraet" name="geraet" placeholder="z. B. Fluke 87V"></div>
-            <div class="field"><label for="f-anzahl">Anzahl</label><input id="f-anzahl" name="anzahl" type="number" min="1" value="1"></div>
-          </div>
-          <div class="field full"><label for="f-msg">Nachricht</label><textarea id="f-msg" name="nachricht" placeholder="Messbereiche, Fristen, Besonderheiten …"></textarea></div>
-          <div class="field full">
-            <div class="consent-row">
-              <input type="checkbox" id="consent" name="consent" required>
-              <span>Ich bin mit der Verarbeitung meiner Angaben einverstanden (<a href="/datenschutz.html">Datenschutz</a>). *</span>
-            </div>
-          </div>
-          <button type="submit" class="btn btn-primary">Anfrage senden →</button>
-          <div class="formnote" id="formnote" role="status" aria-live="polite"></div>
-        </form>
-    </div>
-
-    <!-- KONFIGURATOR -->
-    <div id="panel-konfig" style="display:none">
-      <div id="kk-root"></div>
-    </div>
 
   </div>
 </section>
@@ -1084,64 +1013,21 @@ burger.addEventListener('click',function(){
   if(!open){Object.assign(menu.style,{position:'absolute',top:'70px',left:'0',right:'0',flexDirection:'column',background:'var(--ink)',padding:'20px 24px',gap:'18px',borderBottom:'1px solid var(--line-d)'});}
 });
 
-/* ═══════════════════════════════════════════
-   Kontaktformular
-   Web3Forms: gratis, kein eigener Server
-   TODO: Key von https://web3forms.com holen und eintragen
-═══════════════════════════════════════════ */
-var WEB3FORMS_KEY="DEIN-ACCESS-KEY";
-document.getElementById('anfrage').addEventListener('submit',async function(e){
-  e.preventDefault();
-  if(!this.checkValidity()){this.reportValidity();return;}
-  var note=document.getElementById('formnote');
-  var data=Object.fromEntries(new FormData(this).entries());
-  data.subject="Kalibrieranfrage – "+(data.firma||data.name||'Unbekannt');
-
-  if(WEB3FORMS_KEY==="DEIN-ACCESS-KEY"){
-    var body="Name: "+data.name+"%0D%0AFirma: "+(data.firma||'-')+"%0D%0AE-Mail: "+data.email+"%0D%0ATelefon: "+(data.telefon||'-')+"%0D%0AKalibrierart: "+data.art+"%0D%0ADurchführung: "+data.ort+"%0D%0AGerät: "+(data.geraet||'-')+"%0D%0AAnzahl: "+data.anzahl+"%0D%0A%0D%0A"+(data.nachricht||'');
-    window.location.href="mailto:info@systems-engineering-gmbh.de?subject="+encodeURIComponent(data.subject)+"&body="+body;
-    note.textContent="E-Mail-Programm wird geöffnet …";note.className="formnote ok";
-    return;
-  }
-  note.textContent="Wird gesendet …";note.className="formnote";
-  try{
-    var r=await fetch("https://api.web3forms.com/submit",{method:"POST",headers:{"Content-Type":"application/json","Accept":"application/json"},body:JSON.stringify(Object.assign({access_key:WEB3FORMS_KEY},data))});
-    var j=await r.json();
-    if(j.success){note.textContent="Danke – Ihre Anfrage ist eingegangen. Wir melden uns in Kürze.";note.className="formnote ok";this.reset();}
-    else{note.textContent="Fehler beim Senden. Bitte direkt an info@systems-engineering-gmbh.de.";note.className="formnote err";}
-  }catch(err){
-    note.textContent="Fehler beim Senden. Bitte direkt an info@systems-engineering-gmbh.de.";note.className="formnote err";
-  }
-});
-
 /* ═══════════════════════════════════════
-   Tab-Umschalter
+   Konfigurator erst laden, wenn der Kontaktbereich in Sichtweite
+   kommt — typen.json sind rund 500 KB, die soll nicht jeder
+   Seitenaufruf mitschleppen.
 ═══════════════════════════════════════ */
-function switchTab(t){
-  var ps=document.getElementById('panel-schnell');
-  var pk=document.getElementById('panel-konfig');
-  if(ps) ps.style.display = t==='schnell'?'':'none';
-  if(pk) pk.style.display = t==='konfig' ?'':'none';
-  if(t==='konfig' && typeof initKonfigurator==='function') initKonfigurator();
-  var cs=document.getElementById('tab-schnell'), ck=document.getElementById('tab-konfig');
-  var ds=document.getElementById('dot-schnell'), dk=document.getElementById('dot-konfig');
-  if(cs){
-    cs.style.background  = t==='schnell'?'rgba(59,110,245,.12)':'rgba(255,255,255,.04)';
-    cs.style.borderColor = t==='schnell'?'var(--blue-br)':'var(--line-d)';
-  }
-  if(ds){
-    ds.style.borderColor = t==='schnell'?'var(--blue-br)':'var(--muted)';
-    if(ds.firstElementChild) ds.firstElementChild.style.background = t==='schnell'?'var(--blue-br)':'transparent';
-  }
-  if(ck){
-    ck.style.background  = t==='konfig'?'rgba(59,110,245,.12)':'rgba(255,255,255,.04)';
-    ck.style.borderColor = t==='konfig'?'var(--blue-br)':'var(--line-d)';
-  }
-  if(dk){
-    dk.style.borderColor = t==='konfig'?'var(--blue-br)':'var(--muted)';
-    if(dk.firstElementChild) dk.firstElementChild.style.background = t==='konfig'?'var(--blue-br)':'transparent';
-  }
-}
+(function(){
+  var ziel=document.getElementById('kontakt');
+  if(!ziel)return;
+  var los=function(){ if(typeof initKonfigurator==='function') initKonfigurator(); };
+  if(!('IntersectionObserver' in window)){ los(); return; }
+  var beo=new IntersectionObserver(function(e){
+    if(e[0].isIntersecting){ beo.disconnect(); los(); }
+  },{rootMargin:'400px'});
+  beo.observe(ziel);
+})();
 
 /* ═══════════════════════════════════════
    Anfrage-Konfigurator (global state: window.KK)
@@ -1152,7 +1038,7 @@ function initKonfigurator(){
     step:1, geraete:[],
     kal:{art:'DAkkS',ort:'Labor',termin:'',anmerkung:''},
     kon:{firma:'',name:'',email:'',telefon:'',nachricht:'',consent:false},
-    done:false, copied:false, showRaw:false
+    done:false, copied:false, showRaw:false, hinweis:''
   };
 
   window.kkEsc=function(v){
@@ -1354,7 +1240,7 @@ function initKonfigurator(){
       if(!KK.geraete.length){
         var leer=document.createElement('div');
         leer.style.cssText='font-size:.88rem;color:var(--muted);text-align:center;padding:.75rem 0;border:1px dashed var(--line-d);border-radius:7px';
-        leer.textContent='Noch kein Gerät ausgewählt.';
+        leer.innerHTML='Noch kein Gerät ausgewählt.<br><span style="font-size:.84rem">Sie können auch ohne Auswahl weiter — etwa bei großen Beständen. Wir klären die Geräte dann mit Ihnen.</span>';
         elL.appendChild(leer);
       }
       KK.geraete.forEach(function(g,i){
@@ -1403,13 +1289,7 @@ function initKonfigurator(){
       });
     }
 
-    var nx=document.getElementById('kk-next');
-    if(nx){
-      var ok=KK.geraete.length>0;
-      nx.disabled=!ok;
-      nx.style.opacity=ok?1:.4;
-      nx.style.cursor=ok?'pointer':'not-allowed';
-    }
+
   };
 
   window.kkBuildEmail=function(){
@@ -1426,7 +1306,7 @@ function initKonfigurator(){
         +(d.frei?'\n       Hinweis:      nicht aus unserer Liste':'');
     }).join('\n\n');
     return '== KALIBRIERANFRAGE ==\nDatum: '+new Date().toLocaleDateString('de-DE',{day:'2-digit',month:'2-digit',year:'numeric'})
-      +'\n\n== GERÄTE ==\n'+line+'\n'+g
+      +'\n\n== GERÄTE ==\n'+line+'\n'+(KK.geraete.length?g:'  (keine Geräte benannt — Rücksprache gewünscht)')
       +'\n\n== KALIBRIERUNG ==\n'+line
       +'\nDurchführung:   '+(ortMap[kal.ort]||kal.ort)
       +(kal.termin?'\nWunschtermin:   '+kal.termin:'')
@@ -1451,18 +1331,50 @@ function initKonfigurator(){
   window.kkSetConsent=function(v){KK.kon.consent=v;kkRender();};
   window.kkDel=function(i){KK.geraete.splice(i,1);gsPaint();};
   window.kkGoStep=function(n){KK.step=n;kkRender();};
-  window.kkSubmit=function(){KK.done=true;kkRender();};
+  window.kkSubmit=function(){KK.done=true;KK.hinweis='';kkRender();};
+  /* Die Adresse steht einmal hier. Anfragen gehen an info@ —
+     auftrag@ ist den eingehenden Bestellungen vorbehalten. */
+  window.EMPFAENGER='info@systems-engineering-gmbh.de';
+
+  function kkKopierErsatz(text){
+    /* Ohne HTTPS und in älteren Browsern gibt es keinen Zugriff auf die
+       Zwischenablage. Dann über ein verstecktes Feld. */
+    var t=document.createElement('textarea');
+    t.value=text;
+    t.setAttribute('readonly','');
+    t.style.cssText='position:fixed;top:0;left:-9999px;opacity:0';
+    document.body.appendChild(t);
+    t.select();
+    try{ t.setSelectionRange(0,t.value.length); }catch(e){}
+    var ok=false;
+    try{ ok=document.execCommand('copy'); }catch(e){ ok=false; }
+    document.body.removeChild(t);
+    return ok;
+  }
+
   window.kkCopy=function(){
-    navigator.clipboard.writeText(kkBuildEmail()).then(function(){
-      KK.copied=true;kkRender();
-      setTimeout(function(){KK.copied=false;kkRender();},2000);
-    });
+    var text=kkBuildEmail();
+    var gelungen=function(){
+      KK.copied=true; KK.hinweis='ok'; kkRender();
+      setTimeout(function(){ KK.copied=false; kkRender(); },2000);
+    };
+    var gescheitert=function(){
+      /* Wenigstens den Text zeigen, damit von Hand markiert werden kann. */
+      KK.hinweis='fehler'; KK.showRaw=true; kkRender();
+    };
+    if(navigator.clipboard&&navigator.clipboard.writeText){
+      navigator.clipboard.writeText(text).then(gelungen,function(){
+        if(kkKopierErsatz(text))gelungen(); else gescheitert();
+      });
+    } else {
+      if(kkKopierErsatz(text))gelungen(); else gescheitert();
+    }
   };
   window.kkReset=function(){
     KK.step=1;KK.geraete=[];GS.text='';GS.rubrik=null;
     KK.kal={art:'DAkkS',ort:'Labor',termin:'',anmerkung:''};
     KK.kon={firma:'',name:'',email:'',telefon:'',nachricht:'',consent:false};
-    KK.done=false;KK.copied=false;KK.showRaw=false;kkRender();
+    KK.done=false;KK.copied=false;KK.showRaw=false;KK.hinweis='';kkRender();
   };
 
   function stepBar(){
@@ -1559,8 +1471,10 @@ function initKonfigurator(){
 
         +'<div style="display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:10px">'
         +'<span style="font-family:var(--mono);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)">Geräte</span>'
-        +'<span style="font-family:var(--mono);font-size:.72rem;color:var(--muted)">'+KK.geraete.length+' Position'+(KK.geraete.length===1?'':'en')+' · '+anzGesamt+' Gerät'+(anzGesamt===1?'':'e')+'</span></div>'
-        +geraeteRows
+        +(KK.geraete.length?'<span style="font-family:var(--mono);font-size:.72rem;color:var(--muted)">'+KK.geraete.length+' Position'+(KK.geraete.length===1?'':'en')+' · '+anzGesamt+' Gerät'+(anzGesamt===1?'':'e')+'</span>':'')
+        +'</div>'
+        +(KK.geraete.length?geraeteRows
+          :'<div style="font-size:.88rem;color:var(--muted);padding:12px 13px;border:1px dashed var(--line-d);border-radius:7px;line-height:1.6">Keine Geräte benannt — wir klären die Positionen in der Rücksprache mit Ihnen.</div>')
 
         +'<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin-top:16px;align-items:start">'
         +panel('Kalibrierung',kalRows)
@@ -1569,8 +1483,17 @@ function initKonfigurator(){
         +(KK.kon.nachricht?'<div style="margin-top:12px">'+panel('Nachricht','<div style="font-size:.9rem;color:#C4CFDB;line-height:1.65;white-space:pre-wrap">'+E(KK.kon.nachricht)+'</div>')+'</div>':'')
 
         +'<div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:22px">'
-        +'<a href="mailto:info@systems-engineering-gmbh.de?subject='+subj+'&body='+body+'" style="flex:2;min-width:200px;padding:13px 20px;background:var(--blue);border-radius:7px;font-family:var(--display);font-weight:600;font-size:.95rem;color:#fff;text-decoration:none;text-align:center">Anfrage per E-Mail senden →</a>'
+        +'<a href="mailto:'+EMPFAENGER+'?subject='+subj+'&body='+body+'" style="flex:2;min-width:200px;padding:13px 20px;background:var(--blue);border-radius:7px;font-family:var(--display);font-weight:600;font-size:.95rem;color:#fff;text-decoration:none;text-align:center">Anfrage per E-Mail senden →</a>'
         +'<button onclick="kkCopy()" style="flex:1;min-width:150px;padding:13px 20px;background:'+(KK.copied?'var(--signal)':'rgba(24,194,154,.14)')+';border:1px solid var(--signal);border-radius:7px;font-family:var(--display);font-weight:600;font-size:.95rem;color:'+(KK.copied?'var(--ink)':'var(--signal)')+';cursor:pointer">'+(KK.copied?'✓ Kopiert':'Text kopieren')+'</button>'
+        +'</div>'
+
+        +'<div style="margin-top:12px;font-size:.84rem;line-height:1.6;color:'
+        +(KK.hinweis==='fehler'?'#FFB4A2':(KK.hinweis==='ok'?'var(--signal)':'var(--muted)'))+'">'
+        +(KK.hinweis==='ok'
+            ? '✓ Text kopiert — bitte in eine neue E-Mail an <a href="mailto:'+EMPFAENGER+'?subject='+subj+'" style="color:var(--blue-br)">'+EMPFAENGER+'</a> einfügen.'
+            : (KK.hinweis==='fehler'
+                ? 'Das Kopieren hat nicht geklappt — bitte den Text unten markieren und an <a href="mailto:'+EMPFAENGER+'?subject='+subj+'" style="color:var(--blue-br)">'+EMPFAENGER+'</a> senden.'
+                : 'Öffnet sich kein E-Mail-Programm? Dann „Text kopieren“ und den Text an <a href="mailto:'+EMPFAENGER+'?subject='+subj+'" style="color:var(--blue-br)">'+EMPFAENGER+'</a> senden.'))
         +'</div>'
 
         +'<div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-top:14px">'
@@ -1632,7 +1555,7 @@ function initKonfigurator(){
       : '<div></div>';
 
     var nextBtn=KK.step<3
-      ? '<button id="kk-next" onclick="kkGoStep('+(KK.step+1)+')" '+(KK.step===1&&!hasG?'disabled':'')+' style="padding:10px 24px;background:var(--blue);border:0;border-radius:6px;font-family:var(--display);font-weight:600;color:#fff;cursor:pointer;opacity:'+(KK.step===1&&!hasG?.4:1)+'">Weiter →</button>'
+      ? '<button id="kk-next" onclick="kkGoStep('+(KK.step+1)+')" style="padding:10px 24px;background:var(--blue);border:0;border-radius:6px;font-family:var(--display);font-weight:600;color:#fff;cursor:pointer">Weiter →</button>'
       : '<div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;justify-content:flex-end">'
         +(canS?'':'<span style="font-size:.8rem;color:var(--muted);font-family:var(--body)">Name, E-Mail und Einwilligung erforderlich</span>')
         +'<button onclick="kkSubmit()" '+(canS?'':'disabled')+' style="padding:10px 24px;background:var(--signal);border:0;border-radius:6px;font-family:var(--display);font-weight:600;color:var(--ink);cursor:'+(canS?'pointer':'not-allowed')+';opacity:'+(canS?1:.55)+'">Anfrage erstellen →</button></div>';

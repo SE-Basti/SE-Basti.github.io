@@ -337,6 +337,30 @@
   input[type=radio],input[type=checkbox]{width:auto;flex:none;padding:0;margin:0;accent-color:var(--blue-br)}
   #kk-root label{display:block;font-family:var(--body);font-size:1rem;letter-spacing:normal;text-transform:none;color:inherit;margin:0}
   #kk-root .kkrow{border-bottom:1px solid rgba(255,255,255,.06)}
+  /* Gerätesuche im Konfigurator */
+  #kk-root .gsfeld{width:100%;background:rgba(255,255,255,.07);border:1px solid var(--line-d);border-radius:7px;color:#fff;font-family:var(--body);font-size:.95rem;padding:12px 14px}
+  #kk-root .gsfeld::placeholder{color:var(--muted)}
+  #kk-root .gsfeld:focus{outline:2px solid var(--blue-br);outline-offset:-1px}
+  #kk-root .gsrub{display:flex;flex-wrap:wrap;gap:7px;margin-top:10px}
+  #kk-root .gsrub.zu{max-height:72px;overflow:hidden}
+  #kk-root .gsmehrrub{margin-top:7px;background:none;border:0;padding:0;color:var(--blue-br);font-family:var(--body);font-size:.79rem;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+  #kk-root .gsrub button{font-family:var(--body);font-size:.79rem;padding:6px 12px;border-radius:999px;border:1px solid var(--line-d);background:rgba(255,255,255,.04);color:#C4CFDB;cursor:pointer;transition:all .15s}
+  #kk-root .gsrub button:hover{border-color:var(--blue-br);color:var(--blue-br)}
+  #kk-root .gsrub button[aria-pressed="true"]{background:var(--blue);border-color:var(--blue);color:#fff;font-weight:600}
+  #kk-root .gstreffer{margin-top:12px;border:1px solid var(--line-d);border-radius:8px;max-height:300px;overflow-y:auto;background:rgba(255,255,255,.03)}
+  #kk-root .gstreffer:empty{display:none}
+  #kk-root .gszeile{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;width:100%;padding:10px 14px;border:0;border-bottom:1px solid var(--line-d);background:none;text-align:left;cursor:pointer;font-family:var(--body);color:#fff}
+  #kk-root .gszeile:last-child{border-bottom:0}
+  #kk-root .gszeile:hover,#kk-root .gszeile:focus{background:rgba(59,123,255,.15);outline:none}
+  #kk-root .gsname{font-family:var(--display);font-weight:600;font-size:.92rem}
+  #kk-root .gsklasse{color:var(--muted);font-size:.81rem}
+  #kk-root .gsmehr{padding:9px 14px;color:var(--muted);font-size:.81rem;line-height:1.5}
+  #kk-root .gsrow{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:10px 13px;background:rgba(255,255,255,.04);border:1px solid var(--line-d);border-radius:7px;margin-bottom:6px}
+  #kk-root .gsrow select,#kk-root .gsrow input[type=number]{width:auto;background:rgba(255,255,255,.07);border:1px solid var(--line-d);border-radius:6px;color:#fff;font-family:var(--body);font-size:.84rem;padding:6px 8px;cursor:pointer}
+  #kk-root .gsrow input[type=number]{width:62px;cursor:text}
+  #kk-root .gsrow select option{color:#000}
+  #kk-root .gsweg{background:none;border:0;color:var(--muted);cursor:pointer;font-size:1rem;padding:2px 6px;line-height:1}
+  #kk-root .gsweg:hover{color:#FFB4A2}
   #kk-root .kkrow:last-child{border-bottom:0;padding-bottom:0}
   input:focus,textarea:focus{outline:2px solid var(--blue-br);outline-offset:-1px}
   select{cursor:pointer}
@@ -1125,7 +1149,7 @@ function switchTab(t){
 function initKonfigurator(){
   if(window.KK){kkRender();return;}
   window.KK={
-    step:1, geraete:[], addKat:'', autoKat:false, err:'', focusMod:false,
+    step:1, geraete:[],
     kal:{art:'DAkkS',ort:'Labor',termin:'',anmerkung:''},
     kon:{firma:'',name:'',email:'',telefon:'',nachricht:'',consent:false},
     done:false, copied:false, showRaw:false
@@ -1138,94 +1162,254 @@ function initKonfigurator(){
   };
   window.kkToggleRaw=function(){KK.showRaw=!KK.showRaw;kkRender();};
 
-  var KATS=[
-    {id:'kalibratoren',label:'Multiprodukt-Kalibratoren'},
-    {id:'multimeter',label:'Multimeter & Stromzangen'},
-    {id:'frequenz',label:'Frequenzzähler & Funktionsgeneratoren'},
-    {id:'milliohm',label:'Milliohm- & Isolationsmessgeräte'},
-    {id:'lcr',label:'LCR-Meter & Impedanzmessgeräte'},
-    {id:'temperatur',label:'Temperaturmessgeräte'},
-    {id:'sicherheit',label:'Sicherheitsprüfgeräte'},
-    {id:'oszilloskop',label:'Oszilloskope'},
-    {id:'sonstiges',label:'Sonstiges'},
+  /* ══ Gerätesuche über die Fachdatenbank (typen.json) ══
+     Über 8.000 Gerätetypen aus dem Kalibrierbestand. Die Rubriken sind
+     eine grobe Zuordnung über Stichwörter auf die Geräteklasse; die
+     ERSTE passende Regel gewinnt, die Reihenfolge ist Absicht. Wer eine
+     Zuordnung ändern will, ändert sie hier — gesucht wird immer über
+     alle Einträge, die Rubrik engt nur ein. */
+  var RUBRIKEN=[
+    ["Kalibratoren",        /kalibrator|calibrator|normal|referenz/i],
+    ["Multimeter",          /multimeter|dmm\b|volt.?meter|amperemeter/i],
+    ["Oszilloskope",        /oszillo|oscillo|transientenrekorder|recorder|rekorder/i],
+    ["Stromzangen",         /zange|clamp/i],
+    ["Elektrische Sicherheit", /installation|isolation|insulation|erdung|schutzleiter|appliance|safety|ger(ä|ae)tetester|pr(ü|ue)fger(ä|ae)t|spannungspr(ü|ue)fer|voltage tester|telaris/i],
+    ["Leistung und Energie",/leistung|power|energie|energy|watt|phasen/i],
+    ["Widerstand",          /shunt|widerstand|ohm|lcr|milliohm|micro.?ohm/i],
+    ["Frequenz und Signal", /frequen|counter|z(ä|ae)hler|generator|signal|pegel|spektrum|analyzer/i],
+    ["Temperatur",          /temperat|thermo|pt ?100|pt ?1000|f(ü|ue)hler|pyrometer|infrarot|thermometer/i],
+    ["Klima und Feuchte",   /feuchte|klima|humid|taupunkt|luftge/i],
+    ["Druck",               /druck|pressure|manometer|barometer|vakuum/i],
+    ["Waagen und Massen",   /waage|balance|gewicht|masse\b|scale/i],
+    ["Drehmoment",          /drehmoment|torque|schrauber/i],
+    ["Länge und Form",      /messschieber|b(ü|ue)gelmess|mikrometer|caliper|micrometer|ma(ß|ss)stab|l(ä|ae)nge|dicke|winkel|lehre|endma/i],
+    ["Durchfluss",          /durchfluss|flow|volumenstrom|defender|str(ö|oe)mungs/i],
+    ["Schwingung und Schall", /schwingung|vibration|beschleunig|schall|ger(ä|ae)usch|piezo|aufnehmer/i],
+    ["Licht und Strahlung", /licht|lux|beleucht|strahlung|uv\b|laser/i],
+    ["Zeit und Drehzahl",   /drehzahl|tacho|stoppuhr|zeit|timer/i]
   ];
+  var REST='Weitere';
+  var MAX_TREFFER=40;
 
-  window.kkKatLabel=function(id){return(KATS.find(function(k){return k.id===id;})||{label:id}).label;};
+  function rubrikVon(kl){
+    if(!kl)return REST;
+    for(var i=0;i<RUBRIKEN.length;i++){ if(RUBRIKEN[i][1].test(kl))return RUBRIKEN[i][0]; }
+    return REST;
+  }
 
-  /* ── Kategorie automatisch aus geraete.json erkennen ──
-     geraete.json ist die einzige Datenquelle (build.py erzeugt daraus
-     Geräteliste und Autocomplete). Kommt die Liste später aus einem
-     anderen System, muss nur diese Datei neu erzeugt werden. */
-  window.kkNorm=function(v){return String(v||'').toLowerCase().replace(/[^a-z0-9]/g,'');};
-  window.KKKAT=null;
-  fetch('/geraete.json').then(function(r){return r.ok?r.json():Promise.reject();}).then(function(list){
-    window.KKKAT=list.map(function(g){
-      return {full:kkNorm(g.hersteller+g.modell),her:kkNorm(g.hersteller),mod:kkNorm(g.modell),kat:g.kat};
+  var GS={alle:[],rubrik:null,text:'',geladen:false,fehler:false};
+  window.GS=GS;
+
+  var ARTEN=[['Offen','Bitte beraten'],
+             ['DAkkS','Akkreditierte Kalibrierung (DAkkS)'],
+             ['Werk','Werkskalibrierung']];
+
+  fetch('/typen.json',{cache:'default'})
+    .then(function(a){ if(!a.ok)throw new Error('HTTP '+a.status); return a.json(); })
+    .then(function(roh){
+      GS.alle=roh.map(function(e){
+        var kl=e.g||'';
+        return {h:e.h||'',m:e.m||'',g:kl,n:e.n||0,r:rubrikVon(kl),
+                such:((e.h||'')+' '+(e.m||'')+' '+kl).toLowerCase()};
+      });
+      GS.geladen=true;
+      gsRubriken(); gsPaint();
+    })
+    .catch(function(f){ GS.fehler=true; gsPaint(); console.error('typen.json:',f); });
+
+  function gsPunkte(e,teile){
+    var p=0,mod=e.m.toLowerCase(),her=e.h.toLowerCase();
+    teile.forEach(function(t){
+      if(mod===t)p+=8; else if(mod.indexOf(t)===0)p+=5; else if(mod.indexOf(t)>-1)p+=3;
+      if(her.indexOf(t)===0)p+=2;
     });
-    var seen={};
-    window.KKHER=[];
-    window.KKKAT.forEach(function(d){if(d.her&&!seen[d.her]){seen[d.her]=1;window.KKHER.push(d.her);}});
-    window.KKHER.sort(function(a,b){return b.length-a.length;});
-  }).catch(function(){window.KKKAT=null;});
+    return p;
+  }
 
-  window.kkDetectKat=function(text){
-    var L=window.KKKAT;
-    if(!L||!text)return '';
-    var n=kkNorm(text);
-    if(n.length<3)return '';
-    var i,kat;
+  function gsSuchen(){
+    var teile=GS.text.toLowerCase().split(/\s+/).filter(Boolean);
+    var raus=GS.alle.filter(function(e){
+      if(GS.rubrik&&e.r!==GS.rubrik)return false;
+      for(var i=0;i<teile.length;i++){ if(e.such.indexOf(teile[i])===-1)return false; }
+      return true;
+    });
+    /* Ein Treffer im Modell trifft fast immer das Gemeinte: wer „175"
+       tippt, sucht die Fluke 175. Bei Gleichstand entscheidet, wie oft
+       der Typ bei uns schon kalibriert wurde. */
+    if(teile.length) raus.sort(function(x,y){ var d=gsPunkte(y,teile)-gsPunkte(x,teile); return d!==0?d:(y.n-x.n); });
+    else raus.sort(function(x,y){ return y.n-x.n; });
+    return raus;
+  }
 
-    /* 1) Hersteller + Modell stehen beide im Text → sicherer Treffer */
-    var best='',bestLen=0;
-    for(i=0;i<L.length;i++){
-      if(L[i].full&&L[i].full.length>bestLen&&n.indexOf(L[i].full)>-1){best=L[i].kat;bestLen=L[i].full.length;}
+  function gsRubriken(){
+    var el=document.getElementById('gs-rubriken');
+    if(!el||!GS.alle.length)return;
+    var zahl={};
+    GS.alle.forEach(function(e){ zahl[e.r]=(zahl[e.r]||0)+1; });
+    var namen=RUBRIKEN.map(function(r){return r[0];}).filter(function(n){return zahl[n];});
+    if(zahl[REST])namen.push(REST);
+    el.innerHTML='';
+    namen.forEach(function(n){
+      var b=document.createElement('button');
+      b.type='button'; b.textContent=n;
+      b.setAttribute('aria-pressed',GS.rubrik===n?'true':'false');
+      b.addEventListener('click',function(){
+        GS.rubrik=(GS.rubrik===n)?null:n;
+        Array.prototype.forEach.call(el.children,function(k){
+          k.setAttribute('aria-pressed',k.textContent===GS.rubrik?'true':'false');
+        });
+        gsPaint();
+      });
+      el.appendChild(b);
+    });
+
+    /* Neunzehn Rubriken füllen auf dem Telefon den halben Schirm.
+       Dort zunächst zwei Reihen zeigen, den Rest auf Wunsch. Der
+       Umschalter steht ausserhalb des beschnittenen Bereichs. */
+    var alt=document.getElementById('gs-mehr-rub');
+    if(alt&&alt.parentNode)alt.parentNode.removeChild(alt);
+    el.classList.remove('zu');
+    if(window.innerWidth<=640){
+      el.classList.add('zu');
+      var t=document.createElement('button');
+      t.type='button'; t.id='gs-mehr-rub'; t.className='gsmehrrub';
+      t.textContent='Alle '+namen.length+' Rubriken zeigen';
+      t.addEventListener('click',function(){
+        var zu=el.classList.toggle('zu');
+        t.textContent=zu?('Alle '+namen.length+' Rubriken zeigen'):'Weniger Rubriken';
+      });
+      el.parentNode.insertBefore(t,el.nextSibling);
     }
-    if(best)return best;
+  }
 
-    /* 2) Bekannter Hersteller genannt → nur innerhalb dieser Marke suchen,
-          damit z. B. „Testo 175" nicht über „Fluke 175" einsortiert wird */
-    var her='',H=window.KKHER||[];
-    for(i=0;i<H.length;i++){ if(n.indexOf(H[i])>-1){her=H[i];break;} }
-    if(her){
-      kat='';
-      for(i=0;i<L.length;i++){
-        if(L[i].her===her&&L[i].mod.length>=3&&n.indexOf(L[i].mod)>-1){
-          if(!kat)kat=L[i].kat; else if(kat!==L[i].kat)return '';
+  function gsHinzu(g){
+    var da=KK.geraete.filter(function(x){return x.h===g.h&&x.m===g.m;})[0];
+    if(da){ da.anzahl+=1; }
+    else { g.art='Offen'; g.anzahl=1; KK.geraete.push(g); }
+    GS.text='';
+    var f=document.getElementById('gs-feld');
+    if(f){ f.value=''; f.focus(); }
+    gsPaint();
+  }
+
+  window.gsPaint=function(){
+    var elZ=document.getElementById('gs-zahl'),
+        elT=document.getElementById('gs-treffer'),
+        elL=document.getElementById('gs-liste');
+
+    if(elT&&elZ){
+      elT.innerHTML='';
+      if(GS.fehler){
+        elZ.textContent='Die Geräteliste ist gerade nicht erreichbar — tragen Sie Ihr Gerät bitte von Hand ein.';
+      } else if(!GS.geladen){
+        elZ.textContent='Geräteliste wird geladen …';
+      } else if(!GS.text&&!GS.rubrik){
+        elZ.textContent=GS.alle.length.toLocaleString('de-DE')+' Gerätetypen — tippen Sie los oder wählen Sie eine Rubrik.';
+      } else {
+        var treffer=gsSuchen();
+        elZ.textContent=treffer.length
+          ? treffer.length.toLocaleString('de-DE')+(treffer.length===1?' Treffer':' Treffer')
+          : 'Kein Treffer — tragen Sie das Gerät bitte von Hand ein.';
+
+        treffer.slice(0,MAX_TREFFER).forEach(function(e){
+          var b=document.createElement('button');
+          b.type='button'; b.className='gszeile';
+          var n=document.createElement('span');
+          n.className='gsname'; n.textContent=(e.h?e.h+' ':'')+e.m;
+          b.appendChild(n);
+          if(e.g){
+            var k=document.createElement('span');
+            k.className='gsklasse'; k.textContent=e.g;
+            b.appendChild(k);
+          }
+          b.addEventListener('click',function(){ gsHinzu({h:e.h,m:e.m,g:e.g,frei:false}); });
+          elT.appendChild(b);
+        });
+
+        if(treffer.length>MAX_TREFFER){
+          var m=document.createElement('p');
+          m.className='gsmehr';
+          m.textContent='… und '+(treffer.length-MAX_TREFFER).toLocaleString('de-DE')+' weitere. Schreiben Sie etwas mehr, dann wird die Liste kürzer.';
+          elT.appendChild(m);
         }
       }
-      if(kat)return kat;
-      /* Modell unbekannt: nur raten, wenn die Marke bei uns eindeutig ist */
-      kat='';
-      for(i=0;i<L.length;i++){
-        if(L[i].her===her){ if(!kat)kat=L[i].kat; else if(kat!==L[i].kat)return ''; }
+
+      /* Freie Eingabe immer anbieten: Die Liste kennt nur Geräte, die
+         schon einmal hier waren — sie darf niemanden aussperren. */
+      if(GS.text){
+        var f2=document.createElement('button');
+        f2.type='button'; f2.className='gszeile';
+        var fn=document.createElement('span');
+        fn.className='gsname'; fn.textContent='\u201e'+GS.text+'\u201c so übernehmen';
+        var fk=document.createElement('span');
+        fk.className='gsklasse'; fk.textContent='nicht in der Liste';
+        f2.appendChild(fn); f2.appendChild(fk);
+        f2.addEventListener('click',function(){ gsHinzu({h:'',m:GS.text,g:'',frei:true}); });
+        elT.appendChild(f2);
       }
-      return kat;
     }
 
-    /* 3) Kein Hersteller genannt → eindeutiger Modelltreffer genügt */
-    kat='';
-    for(i=0;i<L.length;i++){
-      if(L[i].mod.length>=3&&n.indexOf(L[i].mod)>-1){
-        if(!kat)kat=L[i].kat; else if(kat!==L[i].kat)return '';
+    if(elL){
+      elL.innerHTML='';
+      if(!KK.geraete.length){
+        var leer=document.createElement('div');
+        leer.style.cssText='font-size:.88rem;color:var(--muted);text-align:center;padding:.75rem 0;border:1px dashed var(--line-d);border-radius:7px';
+        leer.textContent='Noch kein Gerät ausgewählt.';
+        elL.appendChild(leer);
       }
-    }
-    return kat;
-  };
+      KK.geraete.forEach(function(g,i){
+        var row=document.createElement('div');
+        row.className='gsrow';
 
-  window.kkPaintKats=function(){
-    KATS.forEach(function(k){
-      var el=document.getElementById('kk-kat-'+k.id);
-      if(!el)return;
-      var sel=KK.addKat===k.id;
-      el.style.background=sel?'rgba(59,123,255,.18)':'rgba(255,255,255,.04)';
-      el.style.border=sel?'1.5px solid var(--blue-br)':'1px solid var(--line-d)';
-      el.style.color=sel?'var(--blue-br)':'#C4CFDB';
-      el.style.fontWeight=sel?'700':'500';
-    });
-    var h=document.getElementById('kk-kat-hint');
-    if(h)h.textContent=KK.autoKat?'automatisch erkannt':'';
-    var e=document.getElementById('kk-err');
-    if(e){e.textContent=KK.err||'';e.style.display=KK.err?'block':'none';}
+        var bez=document.createElement('div');
+        bez.style.cssText='flex:1 1 180px;min-width:0';
+        var nm=document.createElement('div');
+        nm.className='gsname'; nm.textContent=(g.h?g.h+' ':'')+g.m;
+        bez.appendChild(nm);
+        var kl=document.createElement('div');
+        kl.className='gsklasse'; kl.textContent=g.g||(g.frei?'frei eingetragen':'');
+        if(kl.textContent)bez.appendChild(kl);
+        row.appendChild(bez);
+
+        var sel=document.createElement('select');
+        sel.setAttribute('aria-label','Kalibrierart');
+        ARTEN.forEach(function(o){
+          var opt=document.createElement('option');
+          opt.value=o[0]; opt.textContent=o[1];
+          if(g.art===o[0])opt.selected=true;
+          sel.appendChild(opt);
+        });
+        sel.addEventListener('change',function(){ g.art=sel.value; });
+        row.appendChild(sel);
+
+        var anz=document.createElement('input');
+        anz.type='number'; anz.min='1'; anz.max='999'; anz.value=g.anzahl;
+        anz.setAttribute('aria-label','Anzahl');
+        anz.addEventListener('change',function(){
+          var w=parseInt(anz.value,10);
+          g.anzahl=(w>0&&w<1000)?w:1;
+          anz.value=g.anzahl;
+        });
+        row.appendChild(anz);
+
+        var weg=document.createElement('button');
+        weg.type='button'; weg.className='gsweg'; weg.innerHTML='&times;';
+        weg.setAttribute('aria-label','Entfernen');
+        weg.title='Entfernen';
+        weg.addEventListener('click',function(){ KK.geraete.splice(i,1); gsPaint(); });
+        row.appendChild(weg);
+
+        elL.appendChild(row);
+      });
+    }
+
+    var nx=document.getElementById('kk-next');
+    if(nx){
+      var ok=KK.geraete.length>0;
+      nx.disabled=!ok;
+      nx.style.opacity=ok?1:.4;
+      nx.style.cursor=ok?'pointer':'not-allowed';
+    }
   };
 
   window.kkBuildEmail=function(){
@@ -1235,7 +1419,11 @@ function initKonfigurator(){
     var line='━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━';
     var artMap2={DAkkS:'Akkreditierte Kalibrierung (DAkkS)',Werk:'Werkskalibrierung',Offen:'Bitte beraten'};
     var g=KK.geraete.map(function(d,i){
-      return '  ['+(i<9?'0'+(i+1):i+1)+'] '+d.modell+'\n       Kategorie:    '+kkKatLabel(d.kat)+'\n       Kalibrierart: '+(artMap2[d.art]||'Akkreditierte Kalibrierung (DAkkS)')+'\n       Anzahl:       '+d.anzahl;
+      return '  ['+(i<9?'0'+(i+1):i+1)+'] '+((d.h?d.h+' ':'')+d.m)
+        +(d.g?'\n       Geräteklasse: '+d.g:'')
+        +'\n       Kalibrierart: '+(artMap2[d.art]||'Bitte beraten')
+        +'\n       Anzahl:       '+d.anzahl
+        +(d.frei?'\n       Hinweis:      nicht aus unserer Liste':'');
     }).join('\n\n');
     return '== KALIBRIERANFRAGE ==\nDatum: '+new Date().toLocaleDateString('de-DE',{day:'2-digit',month:'2-digit',year:'numeric'})
       +'\n\n== GERÄTE ==\n'+line+'\n'+g
@@ -1251,7 +1439,6 @@ function initKonfigurator(){
       +(k.nachricht?'\n\n== NACHRICHT ==\n'+line+'\n'+k.nachricht:'');
   };
 
-  window.kkSetKat=function(id){KK.addKat=(KK.addKat===id?'':id);KK.autoKat=false;KK.err='';kkPaintKats();};
   window.kkSetArt=function(v){KK.kal.art=v;kkRender();};
   window.kkSetOrt=function(v){KK.kal.ort=v;kkRender();};
   window.kkSetTermin=function(v){KK.kal.termin=v;};
@@ -1262,21 +1449,7 @@ function initKonfigurator(){
   window.kkSetTelefon=function(v){KK.kon.telefon=v;};
   window.kkSetNachricht=function(v){KK.kon.nachricht=v;};
   window.kkSetConsent=function(v){KK.kon.consent=v;kkRender();};
-  window.kkAdd=function(){
-    var mod=document.getElementById('kk-mod');
-    var anz=document.getElementById('kk-anz');
-    var art=document.getElementById('kk-art');
-    var m=(mod&&mod.value||'').trim();
-    var a=parseInt(anz&&anz.value)||1;
-    var ka=(art&&art.value)||'DAkkS';
-    if(!m){KK.err='Bitte Hersteller, Typ oder Modell eingeben.';kkPaintKats();if(mod)mod.focus();return;}
-    var kat=kkDetectKat(m)||KK.addKat;
-    if(!kat){KK.err='Gerät nicht in unserer Liste — bitte Kategorie auswählen.';kkPaintKats();return;}
-    KK.geraete.push({kat:kat,modell:m,anzahl:a,art:ka});
-    KK.addKat='';KK.autoKat=false;KK.err='';KK.focusMod=true;
-    kkRender();
-  };
-  window.kkDel=function(i){KK.geraete.splice(i,1);kkRender();};
+  window.kkDel=function(i){KK.geraete.splice(i,1);gsPaint();};
   window.kkGoStep=function(n){KK.step=n;kkRender();};
   window.kkSubmit=function(){KK.done=true;kkRender();};
   window.kkCopy=function(){
@@ -1286,7 +1459,7 @@ function initKonfigurator(){
     });
   };
   window.kkReset=function(){
-    KK.step=1;KK.geraete=[];KK.addKat='';KK.autoKat=false;KK.err='';
+    KK.step=1;KK.geraete=[];GS.text='';GS.rubrik=null;
     KK.kal={art:'DAkkS',ort:'Labor',termin:'',anmerkung:''};
     KK.kon={firma:'',name:'',email:'',telefon:'',nachricht:'',consent:false};
     KK.done=false;KK.copied=false;KK.showRaw=false;kkRender();
@@ -1361,10 +1534,13 @@ function initKonfigurator(){
         var chip=g.art==='Werk'?'background:rgba(255,255,255,.08);color:#C4CFDB'
                 :(g.art==='Offen'?'background:rgba(24,194,154,.15);color:var(--signal)'
                 :'background:rgba(11,83,240,.2);color:var(--blue-br)');
-        return '<div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:10px 13px;background:rgba(255,255,255,.04);border:1px solid var(--line-d);border-radius:7px;margin-bottom:6px">'
-          +'<span style="font-family:var(--mono);font-size:.68rem;background:rgba(59,123,255,.18);color:var(--blue-br);padding:2px 8px;border-radius:4px;flex:none">'+E(kkKatLabel(g.kat))+'</span>'
-          +'<span style="flex:1;min-width:120px;font-size:.93rem;color:#fff;font-family:var(--display);font-weight:600">'+E(g.modell)+'</span>'
-          +'<span style="font-family:var(--mono);font-size:.68rem;padding:2px 8px;border-radius:4px;flex:none;'+chip+'">'+E(artLabel[g.art]||'DAkkS')+'</span>'
+        var klasse=g.g||(g.frei?'nicht aus unserer Liste':'');
+        return '<div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:11px 13px;background:rgba(255,255,255,.04);border:1px solid var(--line-d);border-radius:7px;margin-bottom:6px">'
+          +'<span style="flex:1;min-width:150px">'
+          +'<span style="display:block;font-size:.93rem;color:#fff;font-family:var(--display);font-weight:600">'+E((g.h?g.h+' ':'')+g.m)+'</span>'
+          +(klasse?'<span style="display:block;font-size:.8rem;color:var(--muted);margin-top:2px">'+E(klasse)+'</span>':'')
+          +'</span>'
+          +'<span style="font-family:var(--mono);font-size:.68rem;padding:2px 8px;border-radius:4px;flex:none;'+chip+'">'+E(artLabel[g.art]||'Beratung')+'</span>'
           +'<span style="font-family:var(--mono);font-size:.82rem;color:var(--muted);flex:none">× '+E(g.anzahl)+'</span>'
           +'</div>';
       }).join('');
@@ -1411,35 +1587,16 @@ function initKonfigurator(){
     var inner='';
 
     if(KK.step===1){
-      inner='<div style="display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:10px">'
-        +'<span style="font-family:var(--mono);font-size:.7rem;letter-spacing:.1em;color:var(--muted);text-transform:uppercase">Gerätekategorie</span>'
-        +'<span id="kk-kat-hint" style="font-family:var(--mono);font-size:.68rem;color:var(--signal)">'+(KK.autoKat?'automatisch erkannt':'')+'</span></div>'
-        +'<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(132px,1fr));gap:8px;margin-bottom:16px">'
-        +KATS.map(function(k){
-          var sel=KK.addKat===k.id;
-          return '<button id="kk-kat-'+k.id+'" onclick="kkSetKat(\''+k.id+'\')" style="background:'+(sel?'rgba(59,123,255,.18)':'rgba(255,255,255,.04)')+';border:'+(sel?'1.5px solid var(--blue-br)':'1px solid var(--line-d)')+';border-radius:7px;padding:9px 10px;cursor:pointer;text-align:left;color:'+(sel?'var(--blue-br)':'#C4CFDB')+';font-family:var(--body);font-size:.84rem;font-weight:'+(sel?'700':'500')+';transition:all .15s;line-height:1.35">'+k.label+'</button>';
-        }).join('')+'</div>'
-        +'<div style="background:rgba(255,255,255,.04);border-radius:8px;padding:14px 16px;display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap;margin-bottom:14px">'
-        +'<div style="flex:2;min-width:160px"><div style="font-family:var(--mono);font-size:.7rem;color:var(--muted);margin-bottom:5px;text-transform:uppercase;letter-spacing:.08em">Hersteller / Typ / Modell</div>'
-        +'<input id="kk-mod" type="text" list="geraete-list" autocomplete="off" placeholder="z. B. Fluke 87V" style="background:rgba(255,255,255,.07);border:1px solid var(--line-d);border-radius:6px;color:#fff;font-size:.92rem;padding:9px 12px;width:100%" onkeydown="if(event.key===\'Enter\')kkAdd()"></div>'
-        +'<div style="flex:1.4;min-width:150px"><div style="font-family:var(--mono);font-size:.7rem;color:var(--muted);margin-bottom:5px;text-transform:uppercase;letter-spacing:.08em">Kalibrierart</div>'
-        +'<select id="kk-art" style="background:rgba(255,255,255,.07);border:1px solid var(--line-d);border-radius:6px;color:#fff;font-size:.92rem;padding:9px 12px;width:100%;cursor:pointer"><option value="DAkkS">Akkreditierte Kalibrierung (DAkkS)</option><option value="Werk">Werkskalibrierung</option><option value="Offen">Bitte beraten</option></select></div>'
-        +'<div><div style="font-family:var(--mono);font-size:.7rem;color:var(--muted);margin-bottom:5px;text-transform:uppercase;letter-spacing:.08em">Anzahl</div>'
-        +'<input id="kk-anz" type="number" min="1" value="1" style="background:rgba(255,255,255,.07);border:1px solid var(--line-d);border-radius:6px;color:#fff;font-size:.92rem;padding:9px 12px;width:72px"></div>'
-        +'<button onclick="kkAdd()" style="padding:9px 18px;background:var(--blue);border:0;border-radius:6px;font-family:var(--display);font-weight:600;color:#fff;cursor:pointer;white-space:nowrap;flex:none">+ Hinzufügen</button>'
+      inner='<div style="font-family:var(--mono);font-size:.7rem;letter-spacing:.1em;color:var(--muted);text-transform:uppercase;margin-bottom:9px">Kalibrieren Sie mein Gerät?</div>'
+        +'<input id="gs-feld" class="gsfeld" type="text" autocomplete="off" spellcheck="false" placeholder="Hersteller oder Typ — z. B. Fluke 175, 34401A, Stromzange …" aria-describedby="gs-zahl">'
+        +'<div class="gsrub" id="gs-rubriken" role="group" aria-label="Rubriken"></div>'
+        +'<div id="gs-zahl" aria-live="polite" style="font-family:var(--mono);font-size:.72rem;color:var(--muted);margin-top:12px"></div>'
+        +'<div class="gstreffer" id="gs-treffer" role="listbox" aria-label="Gefundene Geräte"></div>'
+        +'<div style="font-size:.82rem;color:var(--muted);line-height:1.65;border-left:2px solid var(--blue-br);padding-left:13px;margin:16px 0 20px">'
+        +'Ein Treffer bedeutet, dass uns das Gerät bekannt ist. Ob eine akkreditierte Kalibrierung möglich ist, hängt vom Messbereich ab und ist in unserer Akkreditierungsurkunde geregelt. Im Zweifel wählen Sie „Bitte beraten\u201c — wir melden uns. Ihr Gerät ist nicht dabei? Tippen Sie es ein und übernehmen Sie es über den letzten Eintrag der Liste.'
         +'</div>'
-        +'<div id="kk-err" style="display:'+(KK.err?'block':'none')+';font-size:.83rem;color:#FFB4A2;margin:-6px 0 12px">'+(KK.err||'')+'</div>'
-        +(hasG
-          ? KK.geraete.map(function(g,i){
-              return '<div style="display:flex;align-items:center;gap:10px;padding:9px 12px;background:rgba(255,255,255,.04);border:1px solid var(--line-d);border-radius:7px;margin-bottom:6px">'
-                +'<span style="font-family:var(--mono);font-size:.7rem;background:rgba(59,123,255,.2);color:var(--blue-br);padding:2px 8px;border-radius:4px;flex:none;white-space:nowrap">'+kkKatLabel(g.kat)+'</span>'
-                +'<span style="flex:1;font-size:.92rem;color:#fff;font-family:var(--display);font-weight:600">'+g.modell+'</span>'
-                +'<span style="font-family:var(--mono);font-size:.68rem;padding:2px 8px;border-radius:4px;flex:none;white-space:nowrap;'+(g.art==='Werk'?'background:rgba(255,255,255,.08);color:#C4CFDB':(g.art==='Offen'?'background:rgba(24,194,154,.15);color:var(--signal)':'background:rgba(11,83,240,.18);color:var(--blue-br)'))+'">'+(g.art==='Werk'?'Werk':(g.art==='Offen'?'Beratung':'DAkkS'))+'</span>'
-                +'<span style="font-family:var(--mono);font-size:.82rem;color:var(--muted)">× '+g.anzahl+'</span>'
-                +'<button onclick="kkDel('+i+')" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:1rem;padding:2px 6px;line-height:1" title="Entfernen">✕</button>'
-                +'</div>';
-            }).join('')
-          : '<div style="font-size:.88rem;color:var(--muted);text-align:center;padding:.75rem 0;border:1px dashed var(--line-d);border-radius:7px">Noch keine Geräte hinzugefügt</div>');
+        +'<div style="font-family:var(--mono);font-size:.7rem;letter-spacing:.1em;color:var(--muted);text-transform:uppercase;margin-bottom:9px">Ihre Geräte</div>'
+        +'<div id="gs-liste"></div>';
     }
 
     if(KK.step===2){
@@ -1475,7 +1632,7 @@ function initKonfigurator(){
       : '<div></div>';
 
     var nextBtn=KK.step<3
-      ? '<button onclick="kkGoStep('+(KK.step+1)+')" '+(KK.step===1&&!hasG?'disabled':'')+' style="padding:10px 24px;background:var(--blue);border:0;border-radius:6px;font-family:var(--display);font-weight:600;color:#fff;cursor:pointer;opacity:'+(KK.step===1&&!hasG?.4:1)+'">Weiter →</button>'
+      ? '<button id="kk-next" onclick="kkGoStep('+(KK.step+1)+')" '+(KK.step===1&&!hasG?'disabled':'')+' style="padding:10px 24px;background:var(--blue);border:0;border-radius:6px;font-family:var(--display);font-weight:600;color:#fff;cursor:pointer;opacity:'+(KK.step===1&&!hasG?.4:1)+'">Weiter →</button>'
       : '<div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;justify-content:flex-end">'
         +(canS?'':'<span style="font-size:.8rem;color:var(--muted);font-family:var(--body)">Name, E-Mail und Einwilligung erforderlich</span>')
         +'<button onclick="kkSubmit()" '+(canS?'':'disabled')+' style="padding:10px 24px;background:var(--signal);border:0;border-radius:6px;font-family:var(--display);font-weight:600;color:var(--ink);cursor:'+(canS?'pointer':'not-allowed')+';opacity:'+(canS?1:.55)+'">Anfrage erstellen →</button></div>';
@@ -1486,16 +1643,25 @@ function initKonfigurator(){
       +'</div>';
 
     if(KK.step===1){
-      var modEl=document.getElementById('kk-mod');
-      if(modEl){
-        modEl.addEventListener('input',function(){
-          var k=kkDetectKat(this.value);
-          if(k){KK.addKat=k;KK.autoKat=true;KK.err='';}
-          else if(KK.autoKat){KK.addKat='';KK.autoKat=false;}
-          kkPaintKats();
+      var feld=document.getElementById('gs-feld');
+      if(feld){
+        feld.value=GS.text;
+        var warte=null;
+        feld.addEventListener('input',function(){
+          GS.text=this.value.trim();
+          clearTimeout(warte);
+          warte=setTimeout(gsPaint,90);
         });
-        if(KK.focusMod){KK.focusMod=false;modEl.focus();}
+        feld.addEventListener('keydown',function(e){
+          if(e.key==='Enter'){
+            e.preventDefault();
+            var erste=document.querySelector('#gs-treffer .gszeile');
+            if(erste)erste.click();
+          }
+        });
       }
+      gsRubriken();
+      gsPaint();
     }
   };
 

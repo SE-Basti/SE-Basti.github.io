@@ -355,7 +355,26 @@
   #kk-root .gsname{font-family:var(--display);font-weight:600;font-size:.92rem}
   #kk-root .gsklasse{color:var(--muted);font-size:.81rem}
   #kk-root .gsmehr{padding:9px 14px;color:var(--muted);font-size:.81rem;line-height:1.5}
-  #kk-root .gsrow{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:10px 13px;background:rgba(255,255,255,.04);border:1px solid var(--line-d);border-radius:7px;margin-bottom:6px}
+  #kk-root .gsgrid{display:grid;grid-template-columns:1fr;gap:24px}
+  #kk-root .gsspalte h4{font-family:var(--mono);font-size:.7rem;letter-spacing:.1em;color:var(--muted);text-transform:uppercase;font-weight:400;margin-bottom:9px}
+  @media(min-width:900px){
+    #kk-root .gsgrid{grid-template-columns:1.05fr .95fr;gap:28px;align-items:start}
+    #kk-root .gsspalte-rechts{position:sticky;top:92px}
+  }
+  #kk-root .gsrow{display:block;padding:11px 13px;background:rgba(255,255,255,.04);border:1px solid var(--line-d);border-radius:7px;margin-bottom:7px}
+  #kk-root .gskopf{display:flex;align-items:flex-start;gap:10px}
+  #kk-root .gsctl{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:9px}
+  #kk-root .gsmenge{font-family:var(--mono);font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+  #kk-root .gsdetailbtn{background:none;border:0;padding:0;color:var(--blue-br);font-family:var(--body);font-size:.79rem;cursor:pointer;text-decoration:underline;text-underline-offset:3px;margin-left:auto;text-align:right}
+  #kk-root .gsdetail{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:9px}
+  #kk-root .gsdetail input{width:100%;background:rgba(255,255,255,.07);border:1px solid var(--line-d);border-radius:6px;color:#fff;font-family:var(--body);font-size:.84rem;padding:7px 10px}
+  #kk-root .gsdetail input::placeholder{color:var(--muted)}
+  #kk-root .kkweg{display:grid;grid-template-columns:repeat(auto-fit,minmax(142px,1fr));gap:2px;background:var(--line-d);border:1px solid var(--line-d);border-radius:8px;overflow:hidden;margin-top:12px}
+  #kk-root .kkweg div{background:var(--ink-2);padding:13px 14px}
+  #kk-root .kkweg .n{font-family:var(--mono);font-size:.66rem;letter-spacing:.1em;color:var(--blue-br);margin-bottom:7px}
+  #kk-root .kkweg h5{font-family:var(--display);font-weight:600;font-size:.88rem;color:#fff;margin-bottom:4px}
+  #kk-root .kkweg p{font-size:.79rem;color:var(--muted);line-height:1.5;margin:0}
+  @media(max-width:620px){#kk-root .gsdetail{grid-template-columns:1fr}}
   #kk-root .gsrow select,#kk-root .gsrow input[type=number]{width:auto;background:rgba(255,255,255,.07);border:1px solid var(--line-d);border-radius:6px;color:#fff;font-family:var(--body);font-size:.84rem;padding:6px 8px;cursor:pointer}
   #kk-root .gsrow input[type=number]{width:62px;cursor:text}
   #kk-root .gsrow select option{color:#000}
@@ -1171,7 +1190,7 @@ function initKonfigurator(){
   function gsHinzu(g){
     var da=KK.geraete.filter(function(x){return x.h===g.h&&x.m===g.m;})[0];
     if(da){ da.anzahl+=1; }
-    else { g.art='Offen'; g.anzahl=1; KK.geraete.push(g); }
+    else { g.art='Offen'; g.anzahl=1; g.serie=''; g.bem=''; g._auf=false; KK.geraete.push(g); }
     GS.text='';
     var f=document.getElementById('gs-feld');
     if(f){ f.value=''; f.focus(); }
@@ -1247,15 +1266,29 @@ function initKonfigurator(){
         var row=document.createElement('div');
         row.className='gsrow';
 
+        /* ── Kopfzeile: Bezeichnung und Entfernen ── */
+        var kopf=document.createElement('div');
+        kopf.className='gskopf';
         var bez=document.createElement('div');
-        bez.style.cssText='flex:1 1 180px;min-width:0';
+        bez.style.cssText='flex:1;min-width:0';
         var nm=document.createElement('div');
         nm.className='gsname'; nm.textContent=(g.h?g.h+' ':'')+g.m;
         bez.appendChild(nm);
         var kl=document.createElement('div');
         kl.className='gsklasse'; kl.textContent=g.g||(g.frei?'frei eingetragen':'');
         if(kl.textContent)bez.appendChild(kl);
-        row.appendChild(bez);
+        kopf.appendChild(bez);
+
+        var weg=document.createElement('button');
+        weg.type='button'; weg.className='gsweg'; weg.innerHTML='&times;';
+        weg.setAttribute('aria-label','Entfernen'); weg.title='Entfernen';
+        weg.addEventListener('click',function(){ KK.geraete.splice(i,1); gsPaint(); });
+        kopf.appendChild(weg);
+        row.appendChild(kopf);
+
+        /* ── Steuerzeile: Kalibrierart, Menge, Details ── */
+        var ctl=document.createElement('div');
+        ctl.className='gsctl';
 
         var sel=document.createElement('select');
         sel.setAttribute('aria-label','Kalibrierart');
@@ -1266,7 +1299,11 @@ function initKonfigurator(){
           sel.appendChild(opt);
         });
         sel.addEventListener('change',function(){ g.art=sel.value; });
-        row.appendChild(sel);
+        ctl.appendChild(sel);
+
+        var mlab=document.createElement('span');
+        mlab.className='gsmenge'; mlab.textContent='Menge';
+        ctl.appendChild(mlab);
 
         var anz=document.createElement('input');
         anz.type='number'; anz.min='1'; anz.max='999'; anz.value=g.anzahl;
@@ -1276,14 +1313,36 @@ function initKonfigurator(){
           g.anzahl=(w>0&&w<1000)?w:1;
           anz.value=g.anzahl;
         });
-        row.appendChild(anz);
+        ctl.appendChild(anz);
 
-        var weg=document.createElement('button');
-        weg.type='button'; weg.className='gsweg'; weg.innerHTML='&times;';
-        weg.setAttribute('aria-label','Entfernen');
-        weg.title='Entfernen';
-        weg.addEventListener('click',function(){ KK.geraete.splice(i,1); gsPaint(); });
-        row.appendChild(weg);
+        /* Seriennummer und Bemerkung erst auf Wunsch — sonst wird die
+           Liste bei zehn Positionen unübersichtlich. */
+        var gefuellt=!!((g.serie&&g.serie.trim())||(g.bem&&g.bem.trim()));
+        var auf=document.createElement('button');
+        auf.type='button'; auf.className='gsdetailbtn';
+        auf.textContent=g._auf?'weniger':(gefuellt?'\u2713 Seriennummer / Bemerkung':'+ Seriennummer, Bemerkung');
+        auf.addEventListener('click',function(){ g._auf=!g._auf; gsPaint(); });
+        ctl.appendChild(auf);
+        row.appendChild(ctl);
+
+        /* ── Detailfelder ── */
+        if(g._auf||gefuellt){
+          var det=document.createElement('div');
+          det.className='gsdetail';
+          var fs=document.createElement('input');
+          fs.type='text'; fs.value=g.serie||'';
+          fs.placeholder='Seriennummer(n), optional';
+          fs.setAttribute('aria-label','Seriennummer');
+          fs.addEventListener('input',function(){ g.serie=fs.value; });
+          det.appendChild(fs);
+          var fb=document.createElement('input');
+          fb.type='text'; fb.value=g.bem||'';
+          fb.placeholder='Bemerkung, optional';
+          fb.setAttribute('aria-label','Bemerkung');
+          fb.addEventListener('input',function(){ g.bem=fb.value; });
+          det.appendChild(fb);
+          row.appendChild(det);
+        }
 
         elL.appendChild(row);
       });
@@ -1303,6 +1362,8 @@ function initKonfigurator(){
         +(d.g?'\n       Geräteklasse: '+d.g:'')
         +'\n       Kalibrierart: '+(artMap2[d.art]||'Bitte beraten')
         +'\n       Anzahl:       '+d.anzahl
+        +(d.serie&&d.serie.trim()?'\n       Seriennummer: '+d.serie.trim():'')
+        +(d.bem&&d.bem.trim()?'\n       Bemerkung:    '+d.bem.trim():'')
         +(d.frei?'\n       Hinweis:      nicht aus unserer Liste':'');
     }).join('\n\n');
     return '== KALIBRIERANFRAGE ==\nDatum: '+new Date().toLocaleDateString('de-DE',{day:'2-digit',month:'2-digit',year:'numeric'})
@@ -1447,10 +1508,14 @@ function initKonfigurator(){
                 :(g.art==='Offen'?'background:rgba(24,194,154,.15);color:var(--signal)'
                 :'background:rgba(11,83,240,.2);color:var(--blue-br)');
         var klasse=g.g||(g.frei?'nicht aus unserer Liste':'');
+        var extra=[];
+        if(g.serie&&g.serie.trim())extra.push('S/N '+g.serie.trim());
+        if(g.bem&&g.bem.trim())extra.push(g.bem.trim());
         return '<div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:11px 13px;background:rgba(255,255,255,.04);border:1px solid var(--line-d);border-radius:7px;margin-bottom:6px">'
           +'<span style="flex:1;min-width:150px">'
           +'<span style="display:block;font-size:.93rem;color:#fff;font-family:var(--display);font-weight:600">'+E((g.h?g.h+' ':'')+g.m)+'</span>'
           +(klasse?'<span style="display:block;font-size:.8rem;color:var(--muted);margin-top:2px">'+E(klasse)+'</span>':'')
+          +(extra.length?'<span style="display:block;font-size:.8rem;color:#C4CFDB;margin-top:3px">'+E(extra.join(' · '))+'</span>':'')
           +'</span>'
           +'<span style="font-family:var(--mono);font-size:.68rem;padding:2px 8px;border-radius:4px;flex:none;'+chip+'">'+E(artLabel[g.art]||'Beratung')+'</span>'
           +'<span style="font-family:var(--mono);font-size:.82rem;color:var(--muted);flex:none">× '+E(g.anzahl)+'</span>'
@@ -1502,7 +1567,19 @@ function initKonfigurator(){
         +'</div>'
         +(KK.showRaw?'<pre style="background:var(--ink);border:1px solid var(--line-d);border-radius:9px;padding:16px 18px;font-family:var(--mono);font-size:.76rem;color:#9FACBA;white-space:pre-wrap;line-height:1.7;overflow-x:auto;margin-top:12px">'+E(email)+'</pre>':'')
 
-        +'<div style="margin-top:18px;padding-top:16px;border-top:1px solid var(--line-d);font-size:.85rem;color:var(--muted)">Lieber persönlich? <a href="tel:+4924029001800" style="color:var(--blue-br);text-decoration:none">+49 2402 900180</a> — Mo–Fr 8–16 Uhr.</div>'
+        +'<div style="margin-top:22px;padding-top:18px;border-top:1px solid var(--line-d)">'
+        +'<div style="font-family:var(--mono);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)">Wie es weitergeht</div>'
+        +'<div class="kkweg">'
+        +'<div><div class="n">01</div><h5>Anfrage</h5><p>Sie schicken uns diese Zusammenstellung.</p></div>'
+        +'<div><div class="n">02</div><h5>Angebot</h5><p>Wir prüfen Messumfang und Termine und melden uns mit einem Preis.</p></div>'
+        +'<div><div class="n">03</div><h5>Ihre Freigabe</h5><p>Verbindlich wird der Auftrag erst, wenn Sie zustimmen.</p></div>'
+        +'<div><div class="n">04</div><h5>Kalibrierung</h5><p>7–10 Werktage im Standard, Express auf Anfrage.</p></div>'
+        +'<div><div class="n">05</div><h5>Kalibrierschein</h5><p>Liegt digital im calServer bereit — mit Fristenüberwachung.</p></div>'
+        +'</div>'
+        +'<div style="margin-top:14px;font-size:.85rem;color:var(--muted);line-height:1.6">'
+        +'Ihre Scheine und die nächsten Fristen finden Sie dauerhaft in Ihrem <a href="https://systems-engineering.calserver.com/" target="_blank" rel="noopener" style="color:var(--blue-br);text-decoration:none">calServer-Portal</a>. '
+        +'Lieber persönlich? <a href="tel:+4924029001800" style="color:var(--blue-br);text-decoration:none">+49 2402 900180</a> — Mo–Fr 8–16 Uhr.'
+        +'</div></div>'
         +'</div>';
       return;
     }
@@ -1510,16 +1587,23 @@ function initKonfigurator(){
     var inner='';
 
     if(KK.step===1){
-      inner='<div style="font-family:var(--mono);font-size:.7rem;letter-spacing:.1em;color:var(--muted);text-transform:uppercase;margin-bottom:9px">Kalibrieren Sie mein Gerät?</div>'
+      inner='<div class="gsgrid">'
+        +'<div class="gsspalte">'
+        +'<h4>Kalibrieren Sie mein Gerät?</h4>'
+        +'<p style="font-size:.86rem;color:var(--muted);line-height:1.6;margin:-2px 0 11px">Stellen Sie hier zusammen, was kalibriert werden soll. Preise nennen wir im Angebot — sie hängen vom Messumfang des einzelnen Geräts ab.</p>'
         +'<input id="gs-feld" class="gsfeld" type="text" autocomplete="off" spellcheck="false" placeholder="Hersteller oder Typ — z. B. Fluke 175, 34401A, Stromzange …" aria-describedby="gs-zahl">'
         +'<div class="gsrub" id="gs-rubriken" role="group" aria-label="Rubriken"></div>'
         +'<div id="gs-zahl" aria-live="polite" style="font-family:var(--mono);font-size:.72rem;color:var(--muted);margin-top:12px"></div>'
         +'<div class="gstreffer" id="gs-treffer" role="listbox" aria-label="Gefundene Geräte"></div>'
-        +'<div style="font-size:.82rem;color:var(--muted);line-height:1.65;border-left:2px solid var(--blue-br);padding-left:13px;margin:16px 0 20px">'
+        +'<div style="font-size:.82rem;color:var(--muted);line-height:1.65;border-left:2px solid var(--blue-br);padding-left:13px;margin-top:16px">'
         +'Ein Treffer bedeutet, dass uns das Gerät bekannt ist. Ob eine akkreditierte Kalibrierung möglich ist, hängt vom Messbereich ab und ist in unserer Akkreditierungsurkunde geregelt. Im Zweifel wählen Sie „Bitte beraten\u201c — wir melden uns. Ihr Gerät ist nicht dabei? Tippen Sie es ein und übernehmen Sie es über den letzten Eintrag der Liste.'
         +'</div>'
-        +'<div style="font-family:var(--mono);font-size:.7rem;letter-spacing:.1em;color:var(--muted);text-transform:uppercase;margin-bottom:9px">Ihre Geräte</div>'
-        +'<div id="gs-liste"></div>';
+        +'</div>'
+        +'<div class="gsspalte gsspalte-rechts">'
+        +'<h4>Ihre Anfrage</h4>'
+        +'<div id="gs-liste"></div>'
+        +'</div>'
+        +'</div>';
     }
 
     if(KK.step===2){

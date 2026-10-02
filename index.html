@@ -1131,10 +1131,10 @@ function initKonfigurator(){
     return p;
   }
 
-  function gsSuchen(){
+  function gsSuchen(ohneRubrik){
     var teile=GS.text.toLowerCase().split(/\s+/).filter(Boolean);
     var raus=GS.alle.filter(function(e){
-      if(GS.rubrik&&e.r!==GS.rubrik)return false;
+      if(!ohneRubrik&&GS.rubrik&&e.r!==GS.rubrik)return false;
       for(var i=0;i<teile.length;i++){ if(e.such.indexOf(teile[i])===-1)return false; }
       return true;
     });
@@ -1212,9 +1212,33 @@ function initKonfigurator(){
         elZ.textContent=GS.alle.length.toLocaleString('de-DE')+' Gerätetypen — tippen Sie los oder wählen Sie eine Rubrik.';
       } else {
         var treffer=gsSuchen();
+        /* Eine gewählte Rubrik filtert auch jede spätere Sucheingabe.
+           Wer das vergisst, hält sein Gerät für unbekannt — deshalb die
+           Rubrik immer benennen und den Ausweg anbieten. */
+        var inRub=GS.rubrik?' in \u201e'+GS.rubrik+'\u201c':'';
+        var ohne=GS.rubrik?gsSuchen(true).length:treffer.length;
         elZ.textContent=treffer.length
-          ? treffer.length.toLocaleString('de-DE')+(treffer.length===1?' Treffer':' Treffer')
-          : 'Kein Treffer — tragen Sie das Gerät bitte von Hand ein.';
+          ? treffer.length.toLocaleString('de-DE')+' Treffer'+inRub
+          : 'Kein Treffer'+inRub+(ohne?'':' — tragen Sie das Gerät bitte von Hand ein.');
+
+        if(GS.rubrik&&ohne>treffer.length){
+          var alle=document.createElement('button');
+          alle.type='button'; alle.className='gszeile';
+          var an=document.createElement('span');
+          an.className='gsname'; an.style.color='var(--blue-br)';
+          an.textContent='In allen Rubriken suchen';
+          var ak=document.createElement('span');
+          ak.className='gsklasse';
+          ak.textContent=ohne.toLocaleString('de-DE')+' Treffer ohne Filter';
+          alle.appendChild(an); alle.appendChild(ak);
+          alle.addEventListener('click',function(){
+            GS.rubrik=null;
+            var rb=document.getElementById('gs-rubriken');
+            if(rb)Array.prototype.forEach.call(rb.children,function(k){k.setAttribute('aria-pressed','false');});
+            gsPaint();
+          });
+          elT.appendChild(alle);
+        }
 
         treffer.slice(0,MAX_TREFFER).forEach(function(e){
           var b=document.createElement('button');

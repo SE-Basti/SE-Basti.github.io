@@ -158,20 +158,21 @@ body{
     <div class="abox">
       <div class="st">Auftraggeber / Rückversand an</div>
       <label>Firma</label>
-      <input type="text" placeholder="Muster GmbH">
+      <input type="text" id="db-firma" placeholder="Muster GmbH">
       <label>Ansprechpartner *</label>
-      <input type="text" placeholder="Max Mustermann">
+      <input type="text" id="db-name" placeholder="Max Mustermann">
       <label>Straße &amp; Nr. *</label>
-      <input type="text" placeholder="Musterstraße 1">
+      <input type="text" id="db-strasse" placeholder="Musterstraße 1">
       <label>PLZ &amp; Ort *</label>
-      <input type="text" placeholder="52222 Stolberg">
+      <input type="text" id="db-ort" placeholder="52222 Stolberg">
       <label>Telefon / E-Mail</label>
-      <input type="text" placeholder="+49 ... · mail@firma.de">
+      <input type="text" id="db-kontakt" placeholder="+49 ... · mail@firma.de">
     </div>
   </div>
 
   <!-- GERÄTE -->
   <div class="st">Einzusendende Geräte</div>
+  <div id="db-hinweis" hidden style="font-size:8pt;color:#0B53F0;margin:-2px 0 4px">Aus Ihrer Anfrage übernommen — bitte prüfen und bei Bedarf ergänzen.</div>
   <table class="gt">
     <thead>
       <tr>
@@ -188,7 +189,7 @@ body{
 
   <!-- ANMERKUNGEN -->
   <div class="st">Anmerkungen</div>
-  <textarea class="anm" placeholder="z. B. Pos. 2 nur Werkskalibrierung · Express gewünscht · bekannte Abweichungen …"></textarea>
+  <textarea class="anm" id="db-anm" placeholder="z. B. Pos. 2 nur Werkskalibrierung · Express gewünscht · bekannte Abweichungen …"></textarea>
 
   <!-- FUSSZEILE -->
   <div class="ftr">
@@ -207,17 +208,76 @@ body{
   document.getElementById('datum').textContent=
     z(n.getDate())+'.'+z(n.getMonth()+1)+'.'+n.getFullYear();
 
+  /* ══ Übernahme aus dem Anfrage-Konfigurator ══
+     Die Startseite legt die Zusammenstellung im Browserspeicher ab —
+     sie bleibt im Gerät des Besuchers, es geht nichts an uns. Liegt
+     etwas Frisches vor, füllen wir das Deckblatt damit vor; sonst
+     bleibt es leer wie bisher. */
+  var vorgabe=null;
+  try{
+    var roh=localStorage.getItem('se-anfrage');
+    if(roh){
+      var v=JSON.parse(roh);
+      /* Älter als drei Stunden ignorieren, sonst taucht die Anfrage
+         von vorgestern beim nächsten Besuch wieder auf. */
+      if(v&&v.ts&&(Date.now()-v.ts)<3*60*60*1000) vorgabe=v;
+    }
+  }catch(e){ vorgabe=null; }
+
+  var esc=function(v){return String(v==null?'':v).replace(/[&<>"]/g,function(c){
+    return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});};
+
+  if(vorgabe){
+    var setz=function(id,wert){ var el=document.getElementById(id); if(el&&wert)el.value=wert; };
+    var k=vorgabe.kon||{};
+    setz('db-firma',k.firma);
+    setz('db-name',k.name);
+    setz('db-kontakt',[k.telefon,k.email].filter(Boolean).join(' · '));
+    var anm=[];
+    (vorgabe.geraete||[]).forEach(function(g,i){
+      if(g.bem&&String(g.bem).trim())anm.push('Pos. '+(i+1)+': '+String(g.bem).trim());
+    });
+    if(vorgabe.termin)anm.push('Wunschtermin: '+vorgabe.termin);
+    if(vorgabe.anmerkung)anm.push(vorgabe.anmerkung);
+    if(vorgabe.nachricht)anm.push(vorgabe.nachricht);
+    if(anm.length)setz('db-anm',anm.join(' · '));
+    var hw=document.getElementById('db-hinweis');
+    if(hw)hw.hidden=false;
+  }
+
+  var ARTK={DAkkS:'DAkkS',Werk:'Werk',Offen:'Beratung'};
+  var liste=(vorgabe&&vorgabe.geraete)||[];
   var ph=['Kalibrator','Multimeter','Thermometer','Frequenzzähler','Oszilloskop','LCR-Meter','Manometer','Waage'];
   var b=document.getElementById('gtbl'),h='';
-  for(var i=1;i<=8;i++)
+  var zeilen=Math.max(8,liste.length);
+
+  for(var i=1;i<=zeilen;i++){
+    var g=liste[i-1];
+    if(g){
+      h+='<tr>'
+        +'<td class="nr">'+i+'</td>'
+        +'<td><input type="text" value="'+esc((g.h?g.h+' ':'')+g.m)+'"></td>'
+        +'<td><input type="text" value="'+esc(g.serie||'')+'" placeholder="SN-..."></td>'
+        +'<td><input type="text" value="'+esc(g.g||'')+'"></td>'
+        +'<td><select style="width:100%;border:none;padding:3px 6px;font-size:8.5pt;background:transparent;outline:none;font-family:inherit;color:#1a1a2e;cursor:pointer">'
+        +'<option value="">—</option>'
+        +['DAkkS','Werk','Beratung'].map(function(o){
+            return '<option'+((ARTK[g.art]||'Beratung')===o?' selected':'')+'>'+o+'</option>';
+          }).join('')
+        +'</select></td>'
+        +'<td><input type="number" value="'+esc(g.anzahl||1)+'" style="width:100%;border:none;padding:3px 8px;font-size:8.5pt;text-align:center;background:transparent;outline:none;font-family:inherit"></td>'
+        +'</tr>';
+      continue;
+    }
     h+='<tr>'+
        '<td class="nr">'+i+'</td>'+
        '<td><input type="text" placeholder="z. B. Fluke 87V"></td>'+
        '<td><input type="text" placeholder="SN-..."></td>'+
-       '<td><input type="text" placeholder="'+ph[i-1]+'"></td>'+
+       '<td><input type="text" placeholder="'+(ph[i-1]||'')+'"></td>'+
        '<td><select style="width:100%;border:none;padding:3px 6px;font-size:8.5pt;background:transparent;outline:none;font-family:inherit;color:#1a1a2e;cursor:pointer"><option value="">—</option><option>DAkkS</option><option>Werk</option><option>Beratung</option></select></td>'+
        '<td><input type="number" placeholder="1" style="width:100%;border:none;padding:3px 8px;font-size:8.5pt;text-align:center;background:transparent;outline:none;font-family:inherit"></td>'+
        '</tr>';
+  }
   b.innerHTML=h;
 })();
 </script>

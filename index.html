@@ -1400,7 +1400,21 @@ function initKonfigurator(){
   window.kkSetConsent=function(v){KK.kon.consent=v;kkRender();};
   window.kkDel=function(i){KK.geraete.splice(i,1);gsPaint();};
   window.kkGoStep=function(n){KK.step=n;kkRender();};
-  window.kkSubmit=function(){KK.done=true;KK.hinweis='';kkRender();};
+  window.kkSubmit=function(){
+    KK.done=true; KK.hinweis='';
+    /* Für das Deckblatt merken — bleibt im Browser des Besuchers. */
+    try{
+      localStorage.setItem('se-anfrage',JSON.stringify({
+        ts:Date.now(),
+        kon:{firma:KK.kon.firma,name:KK.kon.name,email:KK.kon.email,telefon:KK.kon.telefon},
+        geraete:KK.geraete.map(function(g){
+          return {h:g.h,m:g.m,g:g.g,art:g.art,anzahl:g.anzahl,serie:g.serie||'',bem:g.bem||''};
+        }),
+        termin:KK.kal.termin, anmerkung:KK.kal.anmerkung, nachricht:KK.kon.nachricht
+      }));
+    }catch(e){}
+    kkRender();
+  };
   /* Die Adresse steht einmal hier. Anfragen gehen an info@ —
      auftrag@ ist den eingehenden Bestellungen vorbehalten. */
   window.EMPFAENGER='info@systems-engineering-gmbh.de';
@@ -1569,6 +1583,12 @@ function initKonfigurator(){
                 : 'Öffnet sich kein E-Mail-Programm? Dann „Text kopieren“ und den Text an <a href="mailto:'+EMPFAENGER+'?subject='+subj+'" style="color:var(--blue-br)">'+EMPFAENGER+'</a> senden.'))
         +'</div>'
 
+        +(KK.kal.ort!=='VorOrt'
+          ? '<div style="margin-top:14px;padding:13px 15px;background:rgba(255,255,255,.04);border:1px solid var(--line-d);border-radius:8px;display:flex;gap:14px;align-items:center;justify-content:space-between;flex-wrap:wrap">'
+            +'<span style="font-size:.86rem;color:var(--muted);line-height:1.55;flex:1;min-width:210px">Legen Sie Ihrem Paket einen Begleitschein bei — mit Ihren Angaben und Geräten bereits ausgefüllt.</span>'
+            +'<a href="/deckblatt.html" target="_blank" rel="noopener" style="flex:none;padding:9px 16px;border:1px solid var(--blue-br);border-radius:6px;color:var(--blue-br);font-family:var(--display);font-weight:600;font-size:.87rem;text-decoration:none">Begleitschein drucken →</a>'
+            +'</div>'
+          : '')
         +'<div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-top:14px">'
         +'<button onclick="kkToggleRaw()" style="background:none;border:0;padding:0;color:var(--muted);font-family:var(--body);font-size:.84rem;cursor:pointer;text-decoration:underline;text-underline-offset:3px">'+(KK.showRaw?'Anfragetext ausblenden':'Anfragetext anzeigen')+'</button>'
         +'<button onclick="kkReset()" style="background:none;border:0;padding:0;color:var(--muted);font-family:var(--body);font-size:.84rem;cursor:pointer;text-decoration:underline;text-underline-offset:3px">↺ Neue Anfrage erstellen</button>'

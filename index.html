@@ -341,12 +341,6 @@
   #kk-root .gsfeld{width:100%;background:rgba(255,255,255,.07);border:1px solid var(--line-d);border-radius:7px;color:#fff;font-family:var(--body);font-size:.95rem;padding:12px 14px}
   #kk-root .gsfeld::placeholder{color:var(--muted)}
   #kk-root .gsfeld:focus{outline:2px solid var(--blue-br);outline-offset:-1px}
-  #kk-root .gsrub{display:flex;flex-wrap:wrap;gap:7px;margin-top:10px}
-  #kk-root .gsrub.zu{max-height:72px;overflow:hidden}
-  #kk-root .gsmehrrub{margin-top:7px;background:none;border:0;padding:0;color:var(--blue-br);font-family:var(--body);font-size:.79rem;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
-  #kk-root .gsrub button{font-family:var(--body);font-size:.79rem;padding:6px 12px;border-radius:999px;border:1px solid var(--line-d);background:rgba(255,255,255,.04);color:#C4CFDB;cursor:pointer;transition:all .15s}
-  #kk-root .gsrub button:hover{border-color:var(--blue-br);color:var(--blue-br)}
-  #kk-root .gsrub button[aria-pressed="true"]{background:var(--blue);border-color:var(--blue);color:#fff;font-weight:600}
   #kk-root .gstreffer{margin-top:12px;border:1px solid var(--line-d);border-radius:8px;max-height:300px;overflow-y:auto;background:rgba(255,255,255,.03)}
   #kk-root .gstreffer:empty{display:none}
   #kk-root .gszeile{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;width:100%;padding:10px 14px;border:0;border-bottom:1px solid var(--line-d);background:none;text-align:left;cursor:pointer;font-family:var(--body);color:#fff}
@@ -1102,7 +1096,7 @@ function initKonfigurator(){
     return REST;
   }
 
-  var GS={alle:[],rubrik:null,text:'',geladen:false,fehler:false};
+  var GS={alle:[],text:'',geladen:false,fehler:false};
   window.GS=GS;
 
   var ARTEN=[['Offen','Bitte beraten'],
@@ -1118,7 +1112,7 @@ function initKonfigurator(){
                 such:((e.h||'')+' '+(e.m||'')+' '+kl).toLowerCase()};
       });
       GS.geladen=true;
-      gsRubriken(); gsPaint();
+      gsPaint();
     })
     .catch(function(f){ GS.fehler=true; gsPaint(); console.error('typen.json:',f); });
 
@@ -1131,60 +1125,74 @@ function initKonfigurator(){
     return p;
   }
 
-  function gsSuchen(ohneRubrik){
+  /* ══ Schreibweisen zusammenfassen ══
+     Die Geräteklassen stehen teils deutsch, teils englisch in der
+     Datenbank: „Digital-Oszilloskop" neben „Digital Storage
+     Oscilloscope" und „Scopemeter". Wer eine Geräteart sucht, soll
+     alle Schreibweisen bekommen. Neue Paare einfach ergänzen. */
+  var SYN=[
+    ['oszilloskop','oszillo','oscilloscope','oscillo','scopemeter','scope'],
+    ['stromzange','zange','clamp'],
+    ['waage','balance','scale','gewicht'],
+    ['druck','pressure','manometer','barometer','vakuum'],
+    ['temperatur','thermo','thermometer','pyrometer','fühler','fuehler'],
+    ['feuchte','humidity','humid','klima','taupunkt'],
+    ['durchfluss','flow','volumenstrom'],
+    ['drehmoment','torque'],
+    ['widerstand','ohm','resistance','shunt'],
+    ['multimeter','voltmeter','amperemeter'],
+    ['frequenz','frequency','counter','zähler','zaehler'],
+    ['kalibrator','calibrator'],
+    ['schwingung','vibration','beschleunigung','acceleration'],
+    ['schall','sound','geräusch','geraeusch','noise'],
+    ['licht','lux','light','beleuchtung'],
+    ['drehzahl','tacho'],
+    ['länge','laenge','messschieber','caliper','mikrometer','micrometer'],
+    ['isolation','insulation'],
+    ['sicherheit','safety','gerätetester','geraetetester','appliance'],
+    ['leistung','power','energie','energy'],
+    ['datenlogger','logger','recorder'],
+    ['netzteil','power supply','netzgerät','netzgeraet']
+  ];
+
+  function gsAlternativen(t){
+    if(t.length<4)return null;
+    for(var i=0;i<SYN.length;i++){
+      for(var j=0;j<SYN[i].length;j++){
+        var w=SYN[i][j];
+        /* Getipptes ist Anfang eines Synonyms („oszillo" → Gruppe),
+           oder eine Beugung davon („oszilloskope"). Längere
+           Zusammensetzungen wie „temperaturfühler" bleiben wörtlich —
+           sonst würde die Suche ungewollt aufgeweitet. */
+        if(w.indexOf(t)===0)return SYN[i];
+        if(t.indexOf(w)===0&&t.length-w.length<=3)return SYN[i];
+      }
+    }
+    return null;
+  }
+
+  function gsSuchen(){
     var teile=GS.text.toLowerCase().split(/\s+/).filter(Boolean);
+    /* Alternativen einmal je Sucheingabe bestimmen, nicht je Gerät. */
+    var muster=teile.map(function(t){ return gsAlternativen(t)||[t]; });
+
     var raus=GS.alle.filter(function(e){
-      if(!ohneRubrik&&GS.rubrik&&e.r!==GS.rubrik)return false;
-      for(var i=0;i<teile.length;i++){ if(e.such.indexOf(teile[i])===-1)return false; }
+      for(var i=0;i<muster.length;i++){
+        var treffer=false;
+        for(var j=0;j<muster[i].length;j++){
+          if(e.such.indexOf(muster[i][j])>-1){ treffer=true; break; }
+        }
+        if(!treffer)return false;
+      }
       return true;
     });
+
     /* Ein Treffer im Modell trifft fast immer das Gemeinte: wer „175"
        tippt, sucht die Fluke 175. Bei Gleichstand entscheidet, wie oft
        der Typ bei uns schon kalibriert wurde. */
     if(teile.length) raus.sort(function(x,y){ var d=gsPunkte(y,teile)-gsPunkte(x,teile); return d!==0?d:(y.n-x.n); });
     else raus.sort(function(x,y){ return y.n-x.n; });
     return raus;
-  }
-
-  function gsRubriken(){
-    var el=document.getElementById('gs-rubriken');
-    if(!el||!GS.alle.length)return;
-    var zahl={};
-    GS.alle.forEach(function(e){ zahl[e.r]=(zahl[e.r]||0)+1; });
-    var namen=RUBRIKEN.map(function(r){return r[0];}).filter(function(n){return zahl[n];});
-    if(zahl[REST])namen.push(REST);
-    el.innerHTML='';
-    namen.forEach(function(n){
-      var b=document.createElement('button');
-      b.type='button'; b.textContent=n;
-      b.setAttribute('aria-pressed',GS.rubrik===n?'true':'false');
-      b.addEventListener('click',function(){
-        GS.rubrik=(GS.rubrik===n)?null:n;
-        Array.prototype.forEach.call(el.children,function(k){
-          k.setAttribute('aria-pressed',k.textContent===GS.rubrik?'true':'false');
-        });
-        gsPaint();
-      });
-      el.appendChild(b);
-    });
-
-    /* Neunzehn Rubriken füllen auf dem Telefon den halben Schirm.
-       Dort zunächst zwei Reihen zeigen, den Rest auf Wunsch. Der
-       Umschalter steht ausserhalb des beschnittenen Bereichs. */
-    var alt=document.getElementById('gs-mehr-rub');
-    if(alt&&alt.parentNode)alt.parentNode.removeChild(alt);
-    el.classList.remove('zu');
-    if(window.innerWidth<=640){
-      el.classList.add('zu');
-      var t=document.createElement('button');
-      t.type='button'; t.id='gs-mehr-rub'; t.className='gsmehrrub';
-      t.textContent='Alle '+namen.length+' Rubriken zeigen';
-      t.addEventListener('click',function(){
-        var zu=el.classList.toggle('zu');
-        t.textContent=zu?('Alle '+namen.length+' Rubriken zeigen'):'Weniger Rubriken';
-      });
-      el.parentNode.insertBefore(t,el.nextSibling);
-    }
   }
 
   function gsHinzu(g){
@@ -1208,37 +1216,13 @@ function initKonfigurator(){
         elZ.textContent='Die Geräteliste ist gerade nicht erreichbar — tragen Sie Ihr Gerät bitte von Hand ein.';
       } else if(!GS.geladen){
         elZ.textContent='Geräteliste wird geladen …';
-      } else if(!GS.text&&!GS.rubrik){
-        elZ.textContent=GS.alle.length.toLocaleString('de-DE')+' Gerätetypen — tippen Sie los oder wählen Sie eine Rubrik.';
+      } else if(!GS.text){
+        elZ.textContent=GS.alle.length.toLocaleString('de-DE')+' Gerätetypen — tippen Sie los.';
       } else {
         var treffer=gsSuchen();
-        /* Eine gewählte Rubrik filtert auch jede spätere Sucheingabe.
-           Wer das vergisst, hält sein Gerät für unbekannt — deshalb die
-           Rubrik immer benennen und den Ausweg anbieten. */
-        var inRub=GS.rubrik?' in \u201e'+GS.rubrik+'\u201c':'';
-        var ohne=GS.rubrik?gsSuchen(true).length:treffer.length;
         elZ.textContent=treffer.length
-          ? treffer.length.toLocaleString('de-DE')+' Treffer'+inRub
-          : 'Kein Treffer'+inRub+(ohne?'':' — tragen Sie das Gerät bitte von Hand ein.');
-
-        if(GS.rubrik&&ohne>treffer.length){
-          var alle=document.createElement('button');
-          alle.type='button'; alle.className='gszeile';
-          var an=document.createElement('span');
-          an.className='gsname'; an.style.color='var(--blue-br)';
-          an.textContent='In allen Rubriken suchen';
-          var ak=document.createElement('span');
-          ak.className='gsklasse';
-          ak.textContent=ohne.toLocaleString('de-DE')+' Treffer ohne Filter';
-          alle.appendChild(an); alle.appendChild(ak);
-          alle.addEventListener('click',function(){
-            GS.rubrik=null;
-            var rb=document.getElementById('gs-rubriken');
-            if(rb)Array.prototype.forEach.call(rb.children,function(k){k.setAttribute('aria-pressed','false');});
-            gsPaint();
-          });
-          elT.appendChild(alle);
-        }
+          ? treffer.length.toLocaleString('de-DE')+' Treffer'
+          : 'Kein Treffer — tragen Sie das Gerät bitte von Hand ein.';
 
         treffer.slice(0,MAX_TREFFER).forEach(function(e){
           var b=document.createElement('button');
@@ -1456,7 +1440,7 @@ function initKonfigurator(){
     }
   };
   window.kkReset=function(){
-    KK.step=1;KK.geraete=[];GS.text='';GS.rubrik=null;
+    KK.step=1;KK.geraete=[];GS.text='';
     KK.kal={art:'DAkkS',ort:'Labor',termin:'',anmerkung:''};
     KK.kon={firma:'',name:'',email:'',telefon:'',nachricht:'',consent:false};
     KK.done=false;KK.copied=false;KK.showRaw=false;KK.hinweis='';kkRender();
@@ -1616,7 +1600,7 @@ function initKonfigurator(){
         +'<h4>Kalibrieren Sie mein Gerät?</h4>'
         +'<p style="font-size:.86rem;color:var(--muted);line-height:1.6;margin:-2px 0 11px">Stellen Sie hier zusammen, was kalibriert werden soll. Preise nennen wir im Angebot — sie hängen vom Messumfang des einzelnen Geräts ab.</p>'
         +'<input id="gs-feld" class="gsfeld" type="text" autocomplete="off" spellcheck="false" placeholder="Hersteller oder Typ — z. B. Fluke 175, 34401A, Stromzange …" aria-describedby="gs-zahl">'
-        +'<div class="gsrub" id="gs-rubriken" role="group" aria-label="Rubriken"></div>'
+        +'<div style="font-size:.8rem;color:var(--muted);line-height:1.55;margin-top:9px">Typenbezeichnung nicht zur Hand? Suchen Sie nach der Geräteart — z. B. Zange, Druck, Waage, Drehmoment.</div>'
         +'<div id="gs-zahl" aria-live="polite" style="font-family:var(--mono);font-size:.72rem;color:var(--muted);margin-top:12px"></div>'
         +'<div class="gstreffer" id="gs-treffer" role="listbox" aria-label="Gefundene Geräte"></div>'
         +'<div style="font-size:.82rem;color:var(--muted);line-height:1.65;border-left:2px solid var(--blue-br);padding-left:13px;margin-top:16px">'
@@ -1691,7 +1675,6 @@ function initKonfigurator(){
           }
         });
       }
-      gsRubriken();
       gsPaint();
     }
   };

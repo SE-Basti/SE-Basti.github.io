@@ -1393,11 +1393,26 @@ function initKonfigurator(){
   window.kkSetTermin=function(v){KK.kal.termin=v;};
   window.kkSetAnmerkung=function(v){KK.kal.anmerkung=v;};
   window.kkSetFirma=function(v){KK.kon.firma=v;};
-  window.kkSetName=function(v){KK.kon.name=v;kkRender();};
-  window.kkSetEmail=function(v){KK.kon.email=v;kkRender();};
   window.kkSetTelefon=function(v){KK.kon.telefon=v;};
   window.kkSetNachricht=function(v){KK.kon.nachricht=v;};
-  window.kkSetConsent=function(v){KK.kon.consent=v;kkRender();};
+
+  /* Name, E-Mail und Einwilligung entscheiden, ob abgesendet werden darf.
+     Dafür nur den Knopf auffrischen — ein kkRender() bei jedem Zeichen
+     würde das Eingabefeld neu aufbauen und die Schreibmarke verlieren. */
+  window.kkPaintSubmit=function(){
+    var ok=!!(KK.kon.name&&KK.kon.email&&KK.kon.consent);
+    var b=document.getElementById('kk-submit');
+    if(b){
+      b.disabled=!ok;
+      b.style.opacity=ok?1:.55;
+      b.style.cursor=ok?'pointer':'not-allowed';
+    }
+    var h=document.getElementById('kk-pflicht');
+    if(h)h.style.display=ok?'none':'';
+  };
+  window.kkSetName=function(v){KK.kon.name=v;kkPaintSubmit();};
+  window.kkSetEmail=function(v){KK.kon.email=v;kkPaintSubmit();};
+  window.kkSetConsent=function(v){KK.kon.consent=v;kkPaintSubmit();};
   window.kkDel=function(i){KK.geraete.splice(i,1);gsPaint();};
   window.kkGoStep=function(n){KK.step=n;kkRender();};
   window.kkSubmit=function(){
@@ -1669,8 +1684,8 @@ function initKonfigurator(){
     var nextBtn=KK.step<3
       ? '<button id="kk-next" onclick="kkGoStep('+(KK.step+1)+')" style="padding:10px 24px;background:var(--blue);border:0;border-radius:6px;font-family:var(--display);font-weight:600;color:#fff;cursor:pointer">Weiter →</button>'
       : '<div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;justify-content:flex-end">'
-        +(canS?'':'<span style="font-size:.8rem;color:var(--muted);font-family:var(--body)">Name, E-Mail und Einwilligung erforderlich</span>')
-        +'<button onclick="kkSubmit()" '+(canS?'':'disabled')+' style="padding:10px 24px;background:var(--signal);border:0;border-radius:6px;font-family:var(--display);font-weight:600;color:var(--ink);cursor:'+(canS?'pointer':'not-allowed')+';opacity:'+(canS?1:.55)+'">Anfrage erstellen →</button></div>';
+        +'<span id="kk-pflicht" style="font-size:.8rem;color:var(--muted);font-family:var(--body)'+(canS?';display:none':'')+'">Name, E-Mail und Einwilligung erforderlich</span>'
+        +'<button id="kk-submit" onclick="kkSubmit()" '+(canS?'':'disabled')+' style="padding:10px 24px;background:var(--signal);border:0;border-radius:6px;font-family:var(--display);font-weight:600;color:var(--ink);cursor:'+(canS?'pointer':'not-allowed')+';opacity:'+(canS?1:.55)+'">Anfrage erstellen →</button></div>';
 
     root.innerHTML='<div style="background:var(--ink-2);border:1px solid var(--line-d);border-radius:11px;padding:26px 28px">'
       +stepBar()+inner
